@@ -105,6 +105,64 @@ To use apiHandlers, update to @cloudflare/workers-oauth-provider v0.0.4 or later
 
 With these few changes, your MCP server will support both transport methods, making it compatible with both existing and new clients.
 
+## Persistent transport state
+
+When using `createMcpHandler` for stateless MCP servers (non-Agent-based), you can persist transport session state using the `storage` option. This is useful for maintaining session continuity across worker restarts or when using the same handler instance across multiple requests.
+
+### Using WorkerTransport with persistent storage
+
+```ts
+import { createMcpHandler, WorkerTransport } from "agents/mcp";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+
+const server = new McpServer({ name: "MyServer", version: "1.0.0" });
+
+// Configure transport with persistent storage
+const transport = new WorkerTransport({
+  storage: {
+    get: async () => {
+      // Retrieve state from your storage (e.g., KV, Durable Object)
+      return await env.MY_KV.get("transport_state", "json");
+    },
+    set: async (state) => {
+      // Persist state to your storage
+      await env.MY_KV.put("transport_state", JSON.stringify(state));
+    }
+  },
+  sessionIdGenerator: () => crypto.randomUUID()
+});
+
+const handler = createMcpHandler(server, { transport });
+
+export default {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext) {
+    return handler(request, env, ctx);
+  }
+};
+```
+
+### Storage API
+
+The `storage` option accepts an object with two methods:
+
+- `get()` - Retrieves the persisted transport state. Can return `Promise<TransportState | undefined>` or `TransportState | undefined`.
+- `set(state: TransportState)` - Persists the current transport state. Can return `Promise<void>` or `void`.
+
+The `TransportState` type includes:
+- `sessionId?: string` - The current session identifier
+- `initialized: boolean` - Whether the transport has been initialized
+- `protocolVersion?: string` - The MCP protocol version being used
+
+### Use cases for persistent transport state
+
+- **Session continuity**: Maintain the same session ID across worker restarts
+- **Agent-based servers**: When extending `Agent` or `McpAgent`, use Durable Object storage to persist transport state alongside your agent state
+- **Multi-instance coordination**: Share session information across multiple worker instances
+
+:::note[McpAgent handles state automatically]
+If you're using `McpAgent`, transport state is automatically managed for you. The persistent storage API is primarily useful for stateless MCP servers using `createMcpHandler` directly.
+:::
+
 ### Testing with MCP clients
 While most MCP clients have not yet adopted the new Streamable HTTP transport, you can start testing it today using [`mcp-remote`](https://www.npmjs.com/package/mcp-remote), an adapter that lets MCP clients that otherwise only support local connections work with remote MCP servers.
 

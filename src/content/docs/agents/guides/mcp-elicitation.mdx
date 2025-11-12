@@ -1,0 +1,332 @@
+---
+pcx_content_type: tutorial
+title: Build an MCP Server with Elicitation
+sidebar:
+  order: 7
+---
+
+import { Render, TypeScriptExample } from "~/components";
+
+## Overview
+
+MCP elicitation allows your MCP server to request additional input from users during tool execution. This is useful when you need to collect information dynamically, such as:
+
+- Asking for user confirmation before performing an action
+- Collecting form data with multiple fields
+- Requesting additional context based on the current operation
+
+This guide shows you how to build an MCP server that uses elicitation to request user input during tool execution.
+
+## What you'll build
+
+You will create an MCP server with a counter tool that:
+1. Asks the user for confirmation before incrementing
+2. Uses elicitation to request the increment amount
+3. Persists state using Durable Objects
+
+## Prerequisites
+
+Before you begin, you will need:
+
+- A [Cloudflare account](https://dash.cloudflare.com/sign-up)
+- [Node.js](https://nodejs.org/) installed (v18 or later)
+- Basic knowledge of TypeScript
+
+## 1. Set up your project
+
+Create a new project and install dependencies:
+
+```sh
+npm create cloudflare@latest my-mcp-elicitation
+cd my-mcp-elicitation
+npm install agents @modelcontextprotocol/sdk zod
+```
+
+## 2. Configure your Worker
+
+Update your `wrangler.jsonc` to configure Durable Objects:
+
+```jsonc
+{
+  "name": "mcp-elicitation",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-03-14",
+  "compatibility_flags": ["nodejs_compat"],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "MyAgent",
+        "class_name": "MyAgent"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["MyAgent"]
+    }
+  ]
+}
+```
+
+## 3. Build the MCP server with elicitation
+
+Create your agent with elicitation support in `src/index.ts`:
+
+<TypeScriptExample>
+
+```ts title="src/index.ts"
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import {
+  createMcpHandler,
+  type TransportState,
+  WorkerTransport
+} from "agents/mcp";
+import * as z from "zod";
+import { Agent, getAgentByName } from "agents";
+import { CfWorkerJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/cfworker-provider.js";
+
+const STATE_KEY = "mcp_transport_state";
+
+type Env = {
+  MyAgent: DurableObjectNamespace<MyAgent>;
+};
+
+interface State {
+  counter: number;
+}
+
+export class MyAgent extends Agent<Env, State> {
+  server = new McpServer(
+    {
+      name: "Counter with Elicitation",
+      version: "1.0.0"
+    },
+    {
+      jsonSchemaValidator: new CfWorkerJsonSchemaValidator()
+    }
+  );
+
+  // Configure transport with persistent storage
+  transport = new WorkerTransport({
+    sessionIdGenerator: () => this.name,
+    storage: {
+      get: () => {
+        return this.ctx.storage.kv.get<TransportState>(STATE_KEY);
+      },
+      set: (state: TransportState) => {
+        this.ctx.storage.kv.put<TransportState>(STATE_KEY, state);
+      }
+    }
+  });
+
+  initialState = {
+    counter: 0
+  };
+
+  onStart(): void | Promise<void> {
+    // Register a tool that uses elicitation
+    this.server.registerTool(
+      "increase-counter",
+      {
+        description: "Increase the counter",
+        inputSchema: {
+          confirm: z.boolean().describe("Do you want to increase the counter?")
+        }
+      },
+      async ({ confirm }) => {
+        if (!confirm) {
+          return {
+            content: [{ type: "text", text: "Counter increase cancelled." }]
+          };
+        }
+
+        try {
+          // Request additional input using elicitation
+          const basicInfo = await this.server.server.elicitInput({
+            message: "By how much do you want to increase the counter?",
+            requestedSchema: {
+              type: "object",
+              properties: {
+                amount: {
+                  type: "number",
+                  title: "Amount",
+                  description: "The amount to increase the counter by",
+                  minLength: 1
+                }
+              },
+              required: ["amount"]
+            }
+          });
+
+          // Handle user response
+          if (basicInfo.action !== "accept" || !basicInfo.content) {
+            return {
+              content: [{ type: "text", text: "Counter increase cancelled." }]
+            };
+          }
+
+          if (basicInfo.content.amount && Number(basicInfo.content.amount)) {
+            this.setState({
+              ...this.state,
+              counter: this.state.counter + Number(basicInfo.content.amount)
+            });
+
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Counter increased by ${basicInfo.content.amount}, current value is ${this.state.counter}`
+                }
+              ]
+            };
+          }
+
+          return {
+            content: [
+              { type: "text", text: "Counter increase failed, invalid amount." }
+            ]
+          };
+        } catch (error) {
+          console.log(error);
+          return {
+            content: [{ type: "text", text: "Counter increase failed." }]
+          };
+        }
+      }
+    );
+  }
+
+  async onMcpRequest(request: Request) {
+    return createMcpHandler(this.server as any, {
+      transport: this.transport
+    })(request, this.env, {} as ExecutionContext);
+  }
+}
+
+export default {
+  async fetch(request: Request, env: Env, _ctx: ExecutionContext) {
+    const sessionId =
+      request.headers.get("mcp-session-id") ?? crypto.randomUUID();
+    const agent = await getAgentByName(env.MyAgent, sessionId);
+    return await agent.onMcpRequest(request);
+  }
+};
+```
+
+</TypeScriptExample>
+
+## 4. Deploy your MCP server
+
+Deploy your MCP server to Cloudflare:
+
+```sh
+npx wrangler deploy
+```
+
+After deployment, you will see your server URL:
+
+```
+https://mcp-elicitation.YOUR_SUBDOMAIN.workers.dev
+```
+
+## 5. Test your MCP server
+
+You can test your MCP server using any MCP client that supports elicitation. When you call the `increase-counter` tool with `confirm: true`, the server will prompt you for the increment amount through the elicitation API.
+
+## Key concepts
+
+### Elicitation API
+
+The `elicitInput` method requests additional information from the user during tool execution:
+
+```ts
+const result = await this.server.server.elicitInput({
+  message: "By how much do you want to increase the counter?",
+  requestedSchema: {
+    type: "object",
+    properties: {
+      amount: {
+        type: "number",
+        title: "Amount",
+        description: "The amount to increase the counter by"
+      }
+    },
+    required: ["amount"]
+  }
+});
+```
+
+The method returns a result with:
+- `action`: One of `"accept"`, `"decline"`, or `"cancel"`
+- `content`: The user's input (only present when `action` is `"accept"`)
+
+### Persistent transport state
+
+The example uses `WorkerTransport` with Durable Object storage to persist transport state across requests:
+
+```ts
+transport = new WorkerTransport({
+  sessionIdGenerator: () => this.name,
+  storage: {
+    get: () => {
+      return this.ctx.storage.kv.get<TransportState>(STATE_KEY);
+    },
+    set: (state: TransportState) => {
+      this.ctx.storage.kv.put<TransportState>(STATE_KEY, state);
+    }
+  }
+});
+```
+
+This ensures that elicitation requests maintain continuity even after worker restarts.
+
+### Schema-based forms
+
+The `requestedSchema` parameter defines the structure of the form presented to the user. You can specify:
+
+- **Simple fields**: Text, numbers, booleans
+- **Enums**: Dropdown selections
+- **Required fields**: Fields that must be filled
+- **Descriptions**: Help text for each field
+
+Example with multiple field types:
+
+```ts
+const userInfo = await this.server.server.elicitInput({
+  message: "Create user account:",
+  requestedSchema: {
+    type: "object",
+    properties: {
+      email: {
+        type: "string",
+        format: "email",
+        title: "Email Address"
+      },
+      role: {
+        type: "string",
+        title: "Role",
+        enum: ["viewer", "editor", "admin"],
+        enumNames: ["Viewer", "Editor", "Admin"]
+      },
+      sendWelcome: {
+        type: "boolean",
+        title: "Send Welcome Email"
+      }
+    },
+    required: ["email", "role"]
+  }
+});
+```
+
+## Next steps
+
+- Learn more about [MCP tools](/agents/model-context-protocol/tools)
+- Explore [MCP transport options](/agents/model-context-protocol/transport)
+- Build an [MCP client](/agents/guides/build-mcp-client)
+
+## Related resources
+
+- [MCP Specification - Elicitation](https://spec.modelcontextprotocol.io/specification/draft/client/elicitation)
+- [Agents SDK](/agents/api-reference/agents-api)
+- [Example code on GitHub](https://github.com/cloudflare/agents/tree/main/examples/mcp-elicitation)
