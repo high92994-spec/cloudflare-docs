@@ -2,6 +2,16 @@ import { useEffect, useState, type ChangeEvent } from "react";
 import type { CollectionEntry } from "astro:content";
 import type { IconifyIconBuildResult } from "@iconify/utils";
 import { setSearchParams } from "~/util/url";
+import DOMPurify from 'dompurify';
+
+function sanitizeHtml(html: string | null | undefined) {
+  return html
+    ? DOMPurify.sanitize(html, {
+        ALLOWED_TAGS: ['span', 'p'],
+        ALLOWED_ATTR: ['class'],
+      })
+    : '';
+}
 
 export type ProductData = CollectionEntry<"products"> & {
 	icon?: IconifyIconBuildResult;
@@ -137,7 +147,7 @@ const DirectoryCatalog = ({ products }: { products: ProductData[] }) => {
 											{...product.icon.attributes}
 											width={24}
 											height={24}
-											dangerouslySetInnerHTML={{ __html: product.icon.body }}
+											dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.icon.body) }}
 										/>
 									</div>
 								)}
