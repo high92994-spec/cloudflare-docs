@@ -11,7 +11,7 @@ import react from "@astrojs/react";
 
 import { readdir } from "fs/promises";
 import { fileURLToPath } from "url";
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import { existsSync } from "fs";
 
 import remarkValidateImages from "./src/plugins/remark/validate-images";
@@ -71,7 +71,7 @@ const ENABLE_LAST_MOD_IN_SITEMAP =
  */
 function getGitLastModified(filePath: string): string | null {
 	try {
-		const result = execSync(`git log -1 --format=%cI -- "${filePath}"`, {
+		const result = execFileSync('git', ['log', '-1', '--format=%cI', '--', filePath], {
 			encoding: "utf-8",
 		}).trim();
 		return result || null;
