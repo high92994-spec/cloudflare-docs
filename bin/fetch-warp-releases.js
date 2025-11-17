@@ -57,6 +57,7 @@ for (const { platform, display_name } of platforms) {
 
 					if (fs.existsSync(path)) {
 						if (isLinux) {
+							if (path.includes('..')) throw new Error('Invalid file path');
 							const existingFile = YAML.parse(fs.readFileSync(path, "utf-8"));
 
 							existingFile.linuxPlatforms ??= {};
