@@ -26,9 +26,31 @@ export default function validateImages() {
 			let fullPath: string;
 
 			if (url.startsWith("~/assets/")) {
-				fullPath = join(assetsDir, url.slice(9));
+				const relativePath = url.slice(9);
+				if (relativePath.includes("..")) {
+					const position = node.position
+						? ` at line ${node.position.start.line}, column ${node.position.start.column}`
+						: "";
+					const error = new Error(
+						`Invalid image path: "${url}"${position} in ${file.path}`
+					) as Error & { file?: string };
+					error.file = file.path;
+					throw error;
+				}
+				fullPath = join(assetsDir, relativePath);
 			} else if (url.startsWith("/")) {
-				fullPath = join(publicDir, url);
+				const relativePath = url;
+				if (relativePath.includes("..")) {
+					const position = node.position
+						? ` at line ${node.position.start.line}, column ${node.position.start.column}`
+						: "";
+					const error = new Error(
+						`Invalid image path: "${url}"${position} in ${file.path}`
+					) as Error & { file?: string };
+					error.file = file.path;
+					throw error;
+				}
+				fullPath = join(publicDir, relativePath);
 			} else {
 				// Remote image or unrecognised URL
 				return;
