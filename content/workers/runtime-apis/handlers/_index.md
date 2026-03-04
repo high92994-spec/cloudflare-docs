@@ -1,7 +1,8 @@
 ---
 pcx_content_type: concept
 title: Handlers
-layout: single
+meta:
+  description: Methods, such as `fetch()`, on Workers that can receive and process external inputs.
 ---
 
 # Handlers
@@ -19,3 +20,7 @@ export default {
 The following handlers are available within Workers:
 
 {{<directory-listing>}}
+
+## Handlers in Python Workers
+
+When you [write Workers in Python](/workers/languages/python/), handlers are prefixed with `on_`. For example, `on_fetch` or `on_scheduled`.

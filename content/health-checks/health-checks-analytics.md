@@ -19,6 +19,14 @@ You can evaluate origin uptime, latency, failure reason, and specific event logs
 - **Event Log**: Shows individual health check data. 
   - Select each record for additional details on **Round trip time**, the **Failure Reason**, the **Average Waterfall** (showing chronological data about request stages), **Response status code**, and more.
 
+## Set up alerts
+
+You can configure alerts to notify you of any changes in your health check status.
+
+{{<available-notifications product="Health Checks">}}
+
+{{<render file="_get-started.md" productFolder="notifications" >}}
+
 ## Common error codes
 
 ### TCP connection failed
@@ -129,7 +137,7 @@ Data transmission was not acknowledged and the retransmit of data did not succee
 
 #### Solution
 
-Confirm whether the SYN-ACK for the handshake takes place at your origin and contact [Cloudflare support](/support/troubleshooting/general-troubleshooting/contacting-cloudflare-support/).
+Confirm whether the SYN-ACK for the handshake takes place at your origin and contact [Cloudflare support](/support/contacting-cloudflare-support/).
 
 ### ​​Network Unreachable
 
@@ -199,4 +207,4 @@ If the failure cannot be classified as any other type of failure mentioned above
 
 #### Solution
 
-Contact [Cloudflare support](/support/troubleshooting/general-troubleshooting/contacting-cloudflare-support/).
+Contact [Cloudflare support](/support/contacting-cloudflare-support/).

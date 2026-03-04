@@ -1,17 +1,27 @@
 ---
 pcx_content_type: how-to
 title: Google Workspace
-meta:
-    title: Google Workspace - Access
+weight: 12
 ---
 
 # Connect to Google Workspace through Access
 
-This guide covers how to configure Cloudflare Access as a single sign-on provider for your Google Workspace account.
+This guide covers how to configure [Google Workspace](https://support.google.com/a/topic/7579248?hl=en&ref_topic=7556686&sjid=14539485562330725560-NA) as a SAML application in Cloudflare Zero Trust.
+
+{{<Aside type="note">}}
+
+The integration of Access as a single sign-on provider for your Google Workspace account does not work for Google super admins. It will work for other users.
+
+{{</Aside>}}
+
+## Prerequistes
+
+- An [identity provider](/cloudflare-one/identity/idp-integration/) configured in Cloudflare Zero Trust
+- Admin access to a Google Workspace account
 
 ## 1. Create an application in Zero Trust
 
-1. Log in to [Zero Trust](https://one.dash.cloudflare.com/) and go to **Access** > **Applications**.
+1. In [Zero Trust](https://one.dash.cloudflare.com/), go to **Access** > **Applications**.
 
 2. Select **SaaS application**.
 
@@ -50,13 +60,13 @@ When you put your Google Workspace behind Access, users will not be able to log 
 4. Enable **Set up SSO with third-party identity provider**.
 5. Fill in the following information:
    - **Sign-in page URL**: Copy and then paste your **SSO endpoint** from Zero Trust.
-   - **Sign-out page URL**: `https://<team-name>.cloudflareaccess.com/cdn-cgi/access/logout`, where `<team-name>` is your Zero Trust [team name](/cloudflare-one/glossary/#team-name).
+   - **Sign-out page URL**: `https://<team-name>.cloudflareaccess.com/cdn-cgi/access/logout`, where `<team-name>` is your Zero Trust {{<glossary-tooltip term_id="team name">}}team name{{</glossary-tooltip>}}.
    - **Verification certificate**: Upload the certificate file containing your public key.
 6. (Optional) Enable **Use a domain specific issuer**. If you select this option, Google will send an issuer specific to your Google Workspace domain (`google.com/a/<your_domain.com>` instead of the standard `google.com`).
 
 ## 4. Test the integration
 
-1. In your [Google Admin console](https://admin.google.com/), go to **Apps** > **Google Workspace** > **Gmail** > **Setup**,
+1. In your [Google Admin console](https://admin.google.com/), go to **Apps** > **Google Workspace** > **Gmail** > **Setup**.
 2. Copy your Gmail **Web address**.
 3. Open an incognito browser window and go to your Gmail web address (for example, `https://mail.google.com/a/<your_domain.com>`).
 

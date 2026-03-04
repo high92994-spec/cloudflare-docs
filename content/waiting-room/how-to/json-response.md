@@ -23,12 +23,12 @@ To receive a JSON response, you first need to enable that option in your waiting
 
 Make a request to your waiting room endpoint with the header `Accept: application/json`. Note that the header has to match exactly `Accept: application/json`. If it is anything else or has any additional content such as `Accept: application/json, text/html` the response will not return in the JSON format. You must retry the request every `refreshIntervalSeconds` in order for users to advance in the queue.
 
-```curl
+```bash
 ---
 header: Request
 ---
-curl -X GET "https://example.com/waitingroom" \
-        -H "Accept: application/json"
+curl "https://example.com/waitingroom" \
+--header "Accept: application/json"
 ```
 
 ```json
@@ -51,7 +51,7 @@ header: Response
 
 ## Cookies in the request header
 
-Waiting Room is driven by a waiting room cookie, that determines the position of the user in the queue. Because of this, the cookie must be included in each of the subsequent requests to the Waiting Room API for the user. This is mandatory regardless of a user having been queued or not. If a request does not include a cookie, the waiting room will assume a new user and will return a new cookie in the response header. Consequently, this will place the user at the end of the queue. Thus, when consuming the waiting room in a non-browser environment it is important to include the waiting room cookie in the request header.
+Waiting Room is driven by a waiting room cookie that determines the position of the user in the queue. Because of this, the cookie is updated in the response headers for each request. For each request to an endpoint protected by Waiting Room, the application must include the up-to-date cookie retrieved during the previous request. This is mandatory regardless of a user having been queued or not. If a request does not include a cookie, the waiting room will assume this is a new user and will return a new cookie in the response header. Consequently, this will place the user at the end of the queue. Thus, when consuming the waiting room in a non-browser environment it is important to include the waiting room cookie in the request header and keep it updated after each request.
 
 Refer to the [Waiting Room cookies](/waiting-room/reference/waiting-room-cookie/), for more information.
 
@@ -71,12 +71,12 @@ These are some of the places where the JSON-friendly response can be consumed (t
     - **Include cookies in the request header** – As mentioned above, a waiting room [requires cookies](/waiting-room/reference/waiting-room-cookie/), and your backend API will need to support cookies. For ease of use, consider using a cookie manager like [CookieJar](https://pkg.go.dev/net/http#CookieJar).
     - **Enable JSON response** - Via the dashboard or via the API.
     - **Consume JSON data** - Make a request to the Waiting Room endpoint with the `Accept: application/json` header.
-        
+
         Here is an example, demonstrating the usage of the waiting room endpoint inside a Worker. The request headers include the necessary `accept` and `cookie` header values that are required by the Waiting Room API. The accept header ensures that a JSON-friendly response is returned, if a user is queued. Otherwise, if the request is sent to the origin, then whatever the response origin returns gets returned back. In this example, a hardcoded `__cfwaitingroom` value is embedded in the cookie field. In a real-life application, however, we expect that a cookie returned by the Waiting Room API is used in each of the subsequent requests to ensure that the user is placed accordingly in the queue and let through to the origin when it is the users turn.
 
-```bash
+```javascript
 const waitingroomSite = 'https://examples.cloudflareworkers.com/waiting-room';
- 
+
 async function handleRequest() {
   const init = {
     headers: {
@@ -84,7 +84,7 @@ async function handleRequest() {
       'cookie': '__cfwaitingroom=F)J@NcRfUjXnZr4u7x!A%D*G-KaPdSgV'
     }
   }
- 
+
   return await fetch(waitingroomSite, init)
     .then(response => response.json())
     .then(response => {
@@ -96,7 +96,7 @@ async function handleRequest() {
       }
     })
 }
- 
+
 addEventListener('fetch', event => {
   return event.respondWith(handleRequest());
 });

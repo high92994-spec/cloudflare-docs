@@ -22,11 +22,18 @@ If you are on an Enterprise plan and want to renew a custom (modern) certificate
 
 ## Expired certificates
 
-If a valid replacement - covering some or all of the [SANs](/fundamentals/reference/glossary/#subject-alternative-name-san) in the expiring custom certificate - is already available, Cloudflare will remove the expiring custom certificate in the 24 hours before expiration. There is no expected downtime due to certificate transition.
+If a valid replacement - covering some or all of the {{<glossary-tooltip term_id="Subject Alternative Names (SANs)">}}SANs{{</glossary-tooltip>}} in the expiring custom certificate - is already available, Cloudflare will remove the expiring custom certificate in the 24 hours before expiration. There is no expected downtime due to certificate transition.
 
 If no valid replacement is available, Cloudflare will remove the custom certificate after it expires.
 
 Affected domains and subdomains will fall back to any other active certificate covering the hostnames on the expiring certificate.
+
+{{<Aside type="warning">}}
+All certificates in a [certificate pack](/ssl/edge-certificates/custom-certificates/#certificate-packs) are treated as one object.
+The expiration date of a certificate pack is equivalent to the soonest `Not After` date among the certificates in the pack.
+
+For example if you have a custom certificate made of an ECSDA and a RSA certificate, if one of them expires the whole pack will be removed.
+{{</Aside>}}
 
 ## Migrate to other certificate types
 

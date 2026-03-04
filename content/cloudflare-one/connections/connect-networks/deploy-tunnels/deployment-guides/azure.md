@@ -47,15 +47,9 @@ Create two Ubuntu 20.04 LTS VMs, and make sure you record their internal IP addr
 
 1. Run `sudo su` to gain full admin rights to the Virtual Machine.
 
-1. Install `cloudflared` on your instance. In this example, we are running a Debian-based instance, so download the Debian build of `cloudflared`:
+1. Install `cloudflared` on your instance. In this example, we are running a Debian-based instance, so use the Debian package of `cloudflared`:
 
-   ```sh
-   $ wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
-   ```
-
-   ```sh
-   $ dpkg -i cloudflared-linux-amd64.deb
-   ```
+   {{<render file="tunnel/_cloudflared-debian-install.md">}}
 
 1. Run the following command to authenticate `cloudflared` with your Cloudflare account. The command will launch a browser window where you will be prompted to log in with your Cloudflare account and pick any zone you have added to Cloudflare.
 
@@ -69,4 +63,53 @@ Create two Ubuntu 20.04 LTS VMs, and make sure you record their internal IP addr
    $ cloudflared tunnel create Azure-01
    ```
 
-{{<render file="_cloudflared-cloud-deployment.md">}}
+## Complete tunnel configuration
+
+1. Make a directory for your configuration file.
+
+    ```sh
+    $ mkdir /etc/cloudflared
+    ```
+
+    ```sh
+    $ cd /etc/cloudflared
+    ```
+
+2. Build a configuration file. Before moving forward and entering vim, copy your Tunnel ID and credentials path to a notepad.
+
+    ```sh
+    $ vim config.yml
+    ```
+
+3. Type `i` to begin editing the file and copy-paste the following settings in it.
+
+    ```text
+    tunnel: <Tunnel ID/name>
+    credentials-file: /root/.cloudflared/<Tunnel ID>.json
+    protocol: quic
+    warp-routing:
+       enabled: true
+    logfile: /var/log/cloudflared.log
+    #cloudflared to the origin debug
+    loglevel: debug
+    #cloudflared to cloudflare debug
+    transport-loglevel: info
+    ```
+
+4. Press `esc` and then enter `:x` to save and exit.
+
+5. Run `cloudflared` as a service.
+
+```sh
+$ cloudflared service install
+```
+
+```sh
+$ systemctl start cloudflared
+```
+
+```sh
+$ systemctl status cloudflared
+```
+
+Next, visit Zero Trust and ensure your new tunnel shows as **active**. Optionally, begin creating [Access policies](/cloudflare-one/policies/access/) to secure your private resources.

@@ -8,37 +8,42 @@ meta:
 
 # Per-hostname authenticated origin pulls
 
-When you enable Authenticated Origin Pulls per hostname, all proxied traffic to the specified hostname is authenticated at the origin web server. Customers can use client certificates from their Private PKI to authenticate connections from Cloudflare.
+When you enable Authenticated Origin Pulls per hostname, all proxied traffic to the specified hostname is authenticated at the origin web server. You can use client certificates from your Private PKI to authenticate connections from Cloudflare.
+
+{{<render file="_aop-per-hostname-cert-requirement.md">}}<br />
 
 ## 1. Upload custom certificate
 
 First, follow the API instructions to [upload a custom certificate to Cloudflare](/ssl/edge-certificates/custom-certificates/uploading/#upload-a-custom-certificate), but use the [`/origin_tls_client_auth/hostnames/certificates` endpoint](/api/operations/per-hostname-authenticated-origin-pull-upload-a-hostname-client-certificate).
 
-In the API response, save the certificate `id` since it is required for the next step.
+{{<Aside type="note">}}
+You must upload a [leaf certificate](/ssl/concepts/#chain-of-trust). If you upload a root CA instead, the API will retun a `missing leaf certificate` error.
+{{</Aside>}}
 
-## 2. Enable Authenticated Origin Pulls (globally)
+In the API response, save the certificate `id` since it will be required in step 4.
 
-Then, enable the Authenticated Origin Pulls feature as an option for your Cloudflare zone.
+## 2. Configure origin to accept client certificates
 
-This step sets the TLS Client Auth to require Cloudflare to use a client certificate when connecting to your origin server.
+{{<render file="_aop-configure-origin.md" withParameters=" ;; ">}}
 
-{{<tabs labels="Dashboard | API">}}
-{{<tab label="dashboard" no-code="true">}}
+## 3. Enable Authenticated Origin Pulls (globally)
 
-To enable **Authenticated Origin Pulls** in the dashboard:
+{{<render file="_aop-enable-feature.md">}}
 
-1.  Log in to your [Cloudflare account](https://dash.cloudflare.com) and go to a specific domain.
-2.  Go to **SSL/TLS** > **Origin Server**.
-3.  For **Authenticated Origin Pulls**, switch the toggle to **On**.
+## 4. Enable Authenticated Origin Pulls for the hostname
 
-{{</tab>}}
-{{<tab label="api" no-code="true">}}
+Use the Cloudflare API to send a [`PUT`](/api/operations/per-hostname-authenticated-origin-pull-enable-or-disable-a-hostname-for-client-authentication) request to enable Authenticated Origin Pulls for specific hostnames.
 
-To enable or disable **Authenticated Origin Pulls** with the API, send a [`PATCH`](/api/operations/zone-settings-change-tls-client-auth-setting) request with the `value` parameter set to your desired setting (`"on"` or `"off"`).
+If you had set up logging on your origin during step 2, test and confirm that Authenticated Origin Pulls is working.
 
-{{</tab>}}
-{{</tabs>}}
+## 5. Enforce validation check on your origin
 
-## 3. Enable Authenticated Origin Pulls for the hostname
+{{<render file="_aop-enforce-validation.md">}}
 
-Finally, use the Cloudflare API to send a [`PUT`](/api/operations/per-hostname-authenticated-origin-pull-enable-or-disable-a-hostname-for-client-authentication) request to enable Authenticated Origin Pulls for specific hostnames.
+## 6. (Optional) Set up alerts for hostname-level Authenticated Origin Pulls certificates
+
+You can configure alerts to receive notifications before your AOP certificates expire.
+
+{{<available-notifications product="SSL/TLS" notificationName="Hostname-level Authenticated Origin Pulls Certificate Expiration Alert">}}
+
+{{<render file="_get-started.md" productFolder="notifications" >}}

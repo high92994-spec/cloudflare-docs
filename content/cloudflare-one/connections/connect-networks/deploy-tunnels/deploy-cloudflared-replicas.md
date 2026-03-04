@@ -1,7 +1,6 @@
 ---
 pcx_content_type: concept
 title: Tunnel availability and failover
-layout: single
 weight: 2
 ---
 
@@ -25,9 +24,7 @@ By design, replicas do not offer any level of traffic steering (random, hash, or
 
 To deploy multiple instances of `cloudflared`, you can create and configure one tunnel and run it on multiple hosts. If your tunnel runs as a service, only one `cloudflared` instance is allowed per host.
 
-<details>
-<summary>Via the dashboard</summary>
-<div>
+{{<details header="Via the dashboard">}}
 
 1. To create a remotely-managed tunnel, follow the [dashboard setup guide](/cloudflare-one/connections/connect-networks/get-started/create-remote-tunnel/).
 2. On the **Tunnels** page, select your newly created tunnel. The **Connectors** section shows all of the `cloudflared` instances for that tunnel.
@@ -37,12 +34,9 @@ To deploy multiple instances of `cloudflared`, you can create and configure one 
 
 The new replica will appear on the **Connectors** list for the tunnel.
 
-</div>
-</details>
+{{</details>}}
 
-<details>
-<summary>Via the command line</summary>
-<div>
+{{<details header="Via the command line">}}
 
 1. To create a locally-managed tunnel, complete Steps 1 through 5 in the [CLI setup guide](/cloudflare-one/connections/connect-networks/get-started/create-local-tunnel/).
 
@@ -70,29 +64,28 @@ The new replica will appear on the **Connectors** list for the tunnel.
 
   This will output your tunnel UUID as well as two Connector IDs, one for each `cloudflared` process running your tunnel. With this command, you can also see that your tunnel is now being served by eight connections.
 
-</div>
-</details>
+{{</details>}}
 
 You can run the same tunnel across various `cloudflared` processes for up to 100 connections (25 replicas) per tunnel. Cloudflare Load Balancers and DNS records can still point to the tunnel and its UUID. Traffic will be sent to all `cloudflared` processes associated with the tunnel.
 
 {{<Aside type="note" header="Deploy replicas with Kubernetes">}}
-  
+
 For information about running `cloudflared` instances in a Kubernetes deployment, refer to our guides for tunnels managed [remotely via the dashboard](/cloudflare-one/connections/connect-networks/deploy-tunnels/deployment-guides/kubernetes/) or [locally via the CLI](/cloudflare-one/tutorials/many-cfd-one-tunnel/).
-  
+
 {{</Aside>}}
 
 ## Cloudflare Load Balancers
 
-[Cloudflare Load Balancing](/load-balancing/) allows users to proactively steer traffic away from unhealthy origins and intelligently distribute the traffic load based on a multitude of steering algorithms. This process ensures that errors are not served to end users and empowers businesses to tightly couple overall business objectives to their traffic behavior.
+[Cloudflare Load Balancing](/load-balancing/) allows users to proactively steer traffic away from unhealthy origins (or other {{<glossary-tooltip term_id="endpoint" link="/glossary/?term=endpoint">}}endpoints{{</glossary-tooltip>}}) and intelligently distribute the traffic load based on a multitude of steering algorithms. This process ensures that errors are not served to end users and empowers businesses to tightly couple overall business objectives to their traffic behavior.
 
-In this model, more than one tunnel is required with identical configurations. The DNS record (`UUID.cfargotunnel.com`) for each Cloudflare Tunnel can be used at the origin within the Load Balancer. You can then define traffic steering policies to determine how traffic should be routed to each tunnel.
+In this model, more than one tunnel is required with identical configurations. The DNS record (`UUID.cfargotunnel.com`) for each Cloudflare Tunnel can be used at the origin within the load balancer. You can then define traffic steering policies to determine how traffic should be routed to each tunnel.
 
 ### When to use load balancers
 
 - To intelligently steer traffic based on latency, geolocation, or other signals.
 - To implement failover logic if a tunnel reaches an inactive state.
 - To get alerted when a tunnel reaches an inactive state.
-- To distribute traffic more evenly across your Cloudflare Tunnel-accessible origins.
+- To distribute traffic more evenly across your Cloudflare Tunnel-accessible origins or endpoints.
 
 ### Deploy a load balancer
 

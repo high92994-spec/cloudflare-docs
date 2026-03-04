@@ -14,8 +14,8 @@ CT Monitoring alerts are triggered not only by Cloudflare processes - including 
 
 {{<Aside type="warning" header="Aspects to consider">}}
 
-* If you use other services that automatically issue certificates for your domain or subdomains, this may trigger CT Monitoring emails as well.
-* If your domain is included in a shared certificate, you may receive notifications for domains or subdomains that do not belong to you but are included as [subject alternative names (SANs)](/fundamentals/reference/glossary/#subject-alternative-name-san) together with your domain. You can use a tool like [Certificate Search](https://crt.sh/) to gather more information in such cases.
+* If you use Cloudflare or other services that automatically issue certificates for your domain or subdomains, this may trigger CT Monitoring emails as well.
+* If your domain is included in a shared certificate, you may receive notifications for domains or subdomains that do not belong to you but are included as {{<glossary-tooltip term_id="Subject Alternative Names (SANs)">}}subject alternative names (SANs){{</glossary-tooltip>}} together with your domain. You can use a tool like [Certificate Search](https://crt.sh/) to gather more information in such cases.
 * CT Monitoring does not detect phishing attempts. For example, for `cloudflare.com`, an alert would not trigger if a certificate was issued for `cloudf1are.com` or `cloud-flare.com`.
 
 {{</Aside>}}
@@ -41,11 +41,15 @@ To stop receiving alerts, disable **Certificate Transparency Monitoring** or rem
 
 Most certificate alerts are routine. Cloudflare sends alerts whenever a certificate for your domain appears in a log. Certificates expire (and must be reissued), so it is completely normal to receive issuance emails. If your domain is listed in the email, along with reasonable ownership and certificate information, then **no action is required**.
 
-Additionally, you should check whether the certificate was issued through Cloudflare. To view all Cloudflare-issued certificates and backup certificates - which require no additional actions - visit the [Edge Certificates page](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates) in the dashboard.
+Additionally, you should check whether the certificate was issued through Cloudflare. Cloudflare partners with [multiple CAs](/ssl/reference/certificate-authorities/) to provide certificates.
+To view all Cloudflare-issued certificates and backup certificates - which require no additional actions - visit the [Edge Certificates page](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates) in the dashboard.
 
 You _should_ take action when something is clearly wrong, such as if you:
 
 - Do not recognize the certificate issuer.
+    {{<Aside type="note">}}
+Note that Cloudflare provisions backup certificates, so you may see a certificate listed that is not in active use for your site. The [Edge Certificates page](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates) will show all certificates requested for your site.
+{{</Aside>}}
 - Have recently noticed problems with your website.
 
 ---
@@ -62,6 +66,8 @@ Only Certificate Authorities can revoke malicious certificates. If you believe a
 
 - [GoDaddy support](https://www.godaddy.com/contact-us?sp_hp=B)
 
+- [Google Trust Services support](https://pki.goog/faq/)
+
 - [IdenTrust support](https://www.identrust.com/support/support-team)
 
 - [Let’s Encrypt support](https://letsencrypt.org/contact/)
@@ -74,7 +80,7 @@ Domain registrars may be able to **suspend** potentially malicious domains. If, 
 
 ### Option 3: Improvise
 
-There are other ways to combat malicious certificates. You can warn your visitors with an on-site notification, ask browser makers (Google for Chrome, etc.) to block these domains, or you can [contact us to help combat malicious certificates](/support/troubleshooting/general-troubleshooting/contacting-cloudflare-support/).
+There are other ways to combat malicious certificates. You can warn your visitors with an on-site notification or ask browser makers (Google for Chrome, etc.) to block these domains.
 
 If someone is attempting to impersonate you online, you should absolutely take action. This is usually difficult to recognize, so exercise caution. **Remember: the vast majority of certificates are not malicious. Only take action if you believe something is wrong.**
 

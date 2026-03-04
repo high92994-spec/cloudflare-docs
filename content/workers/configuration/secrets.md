@@ -1,41 +1,42 @@
 ---
 pcx_content_type: configuration
 title: Secrets
+meta:
+  description: Store sensitive information, like API keys and auth tokens, in your Worker.
 ---
 
 # Secrets
 
 ## Background
 
-Secrets are [environment variables](/workers/configuration/environment-variables/) that are encrypted and not visible after they are set. Secrets are used for storing sensitive information like API keys and auth tokens. Secrets are available on the [`env` parameter](/workers/runtime-apis/handlers/fetch/#parameters) passed to your Worker's [`fetch` event handler](/workers/runtime-apis/handlers/fetch/).
+Secrets are a type of binding that allow you to attach encrypted text values to your Worker. You cannot see secrets after you set them and can only access secrets via [Wrangler](/workers/wrangler/commands/#secret) or programmatically via the [`env` parameter](/workers/runtime-apis/handlers/fetch/#parameters). Secrets are used for storing sensitive information like API keys and auth tokens. Secrets are available on the [`env` parameter](/workers/runtime-apis/handlers/fetch/#parameters) passed to your Worker's [`fetch` event handler](/workers/runtime-apis/handlers/fetch/).
 
-## Add secrets to your project
+## Local Development with Secrets
 
-### Secrets in development
+{{<render file="_secrets-in-dev.md">}}
 
-When developing your Worker locally, create a `.dev.vars` file in the root of your project to define secrets that will be available to your Worker when running `wrangler dev`.
+## Secrets on deployed Workers
 
-The `.dev.vars` file should be formatted like a `dotenv` file.
-
-```bash
----
-header: .dev.vars
----
-SECRET_KEY=value
-API_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-```
-
-### Secrets on deployed Workers
+### Adding secrets to your project
 
 #### Via Wrangler
 
-To add a secret to a Worker, run the [`wrangler secret put` command](/workers/wrangler/commands/#secret) in your terminal, where `<KEY>` is the name of your secret:
+Secrets can be added through [`wrangler secret put`](/workers/wrangler/commands/#secret) or [`wrangler versions secret put`](/workers/wrangler/commands/#secret-put) commands.
+
+`wrangler secret put` creates a new version of the Worker and deploys it immediately.
 
 ```sh
 ---
 filename: wrangler secret put
 ---
-$ wrangler secret put <KEY>
+$ npx wrangler secret put <KEY>
+```
+
+
+If using [gradual deployments](/workers/configuration/versions-and-deployments/gradual-deployments/), instead use the `wrangler versions secret put` command. This will only create a new version of the Worker, that can then be deploying using [`wrangler versions deploy`](/workers/wrangler/commands/#deploy-2). 
+
+```sh
+$ npx wrangler versions secret put <KEY> --x-versions
 ```
 
 #### Via the dashboard
@@ -49,22 +50,31 @@ To add a secret via the dashboard:
 5. Input a **Variable name** and its **value**, which will be made available to your Worker.
 6. Select **Encrypt** to protect the secret's value. This will prevent the value from being visible via Wrangler and the dashboard.
 7. (Optional) To add multiple secrets, select **Add variable**.
-8. Select **Save** to implement your changes.
+8. **Save** or **Save and Deploy** your changes.
 
-## Delete secrets from your project
 
-### Via Wrangler
+### Delete secrets from your project
 
-To delete a secret from your Worker project, run the [`wrangler secret delete` command](/workers/wrangler/commands/#delete-7):
+#### Via Wrangler
+
+Secrets can be deleted through [`wrangler secret delete`](/workers/wrangler/commands/#delete-7) or [`wrangler versions secret delete`](/workers/wrangler/commands/#secret-delete) commands.
+
+`wrangler secret delete` creates a new version of the Worker and deploys it immediately.
 
 ```sh
 ---
 filename: wrangler secret delete
 ---
-$ wrangler secret delete <KEY>
+$ npx wrangler secret delete <KEY>
 ```
 
-### Via the dashboard
+If using [gradual deployments](/workers/configuration/versions-and-deployments/gradual-deployments/), instead use the `wrangler versions secret delete` command. This will only create a new version of the Worker, that can then be deploying using [`wrangler versions deploy`](/workers/wrangler/commands/#deploy-2). 
+
+```sh
+$ npx wrangler versions secret delete <KEY> --x-versions
+```
+
+#### Via the dashboard
 
 To delete a secret from your Worker project via the dashboard:
 
@@ -73,7 +83,7 @@ To delete a secret from your Worker project via the dashboard:
 3. In **Overview**, select your Worker > **Settings**.
 4. Under **Environment Variables**, select **Edit variables**.
 5. Select **X** next to the secret you want to delete.
-6. Select **Save and deploy**.
+6. **Save** or **Save and Deploy** your changes.
 
 {{<render file="_env_and_secrets.md">}}
 

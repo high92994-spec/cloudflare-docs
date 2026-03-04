@@ -22,7 +22,7 @@ The Network Analytics dashboard is only available for customers on an Enterprise
 
 ### Web Analytics
 
-Web Analytics (formerly known as Browser Insights) [provides free, privacy-first analytics for your website](/analytics/web-analytics/). Web Analytics does not collect your visitor's personal data, and allows you to have a detailed view into the performance of web pages as experienced by your visitors.
+Web Analytics (formerly known as Browser Insights) [provides free, privacy-first analytics for your website](/web-analytics/). Web Analytics does not collect your visitor's personal data, and allows you to have a detailed view into the performance of web pages as experienced by your visitors.
 
 
 ### Carbon Impact Report
@@ -52,8 +52,8 @@ Beyond the analytics provided for your properties, you can also access analytics
 
 * [Bot Analytics](/bots/bot-analytics/) - Shows which requests are associated with known bots, likely automated traffic, likely human traffic, and more.
 * [Cache Analytics](/cache/performance-review/cache-analytics/) - Insights to that help determine if resources are missing from cache, expired, or ineligible for caching.
-* [Security Events](/waf/security-events/) - Highlights attack and mitigation metrics detected by the Cloudflare WAF and HTTP DDoS protection systems.
-* [Security Analytics](/waf/security-analytics/) - Displays information about all incoming HTTP requests, including those not affected by security measures (for example, from the WAF and DDoS protection systems).
+* [Security Events](/waf/analytics/security-events/) - Highlights attack and mitigation metrics detected by the Cloudflare WAF and HTTP DDoS protection systems.
+* [Security Analytics](/waf/analytics/security-analytics/) - Displays information about all incoming HTTP requests, including those not affected by security measures (for example, from the WAF and DDoS protection systems).
 * [Load Balancing Analytics](/load-balancing/reference/load-balancing-analytics/) - Features metrics to help gain insights into traffic load balancer steering decisions.
 
 

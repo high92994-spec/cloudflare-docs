@@ -6,6 +6,8 @@ title: Auto Minify is not working
 
 # Auto Minify is not working
 
+{{<render file="_auto-minify-deprecation-warning.md">}}
+
 Once enabled, Cloudflare's Auto Minify will minify your HTML and your cached CSS and JS files. If you view the source of your files in your web browser or via a command line tool (such as cURL) and you do not see the code being minified, here are some things you should check:
 
 - Cloudflare only minifies files served by hostnames with [proxied DNS records](/dns/manage-dns-records/reference/proxied-dns-records/) (code on third-party domains not using Cloudflare will not be minified).

@@ -2,14 +2,19 @@
 pcx_content_type: how-to
 title: CrowdStrike
 weight: 4
-layout: single
 ---
 
 # CrowdStrike
 
-{{<render file="posture/_available-for-warp-with-gateway.md">}}
+{{<render file="posture/_service-provider-intro.md" withParameters="Crowdstrike">}}
 
-Device posture with CrowdStrike requires the CrowdStrike agent and the Cloudflare WARP client to be deployed on your devices. Our service-to-service posture check identifies devices based on their serial numbers.
+## Prerequisites
+
+Device posture with Crowdstrike requires:
+
+- Falcon Enterprise plan or above
+- Crowdstrike agent is deployed on the device.
+- {{<render file="posture/_prereqs-warp-is-deployed.md" withParameters="[Service providers](/cloudflare-one/identity/devices/service-providers/)">}}
 
 ## Set up CrowdStrike as a service provider
 
@@ -70,3 +75,5 @@ Device posture data is gathered from the [CrowdStrike Zero Trust Assessment APIs
 | Overall       | Overall ZTA score   | `1` to `100` |
 | Sensor config | Sensor signal score | `1` to `100` |
 | Version       | ZTA score version   | `2.1.0`      |
+| State         | Current online status of the device | _Online_, _Offline_, or _Unknown_ |
+| Last seen     | Elapsed time since the device was last seen. Only returned if its state is `online` or `unknown`. | Less than 1 hour, 3 hours, 6 hours, 12 hours, 24 hours, 7 days, 30 days, or more than 30 days|

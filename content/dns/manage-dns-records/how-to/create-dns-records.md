@@ -32,7 +32,7 @@ To create a DNS record in the dashboard:
 3.  Click **Add record**.
 4.  Choose a record [**Type**](/dns/manage-dns-records/reference/dns-record-types/).
 5.  Complete the required fields, which vary per record. Particularly important fields (for some records) include:
-    - **Proxy status**: For `A`, `AAAA`, and `CNAME` records, decide whether hostname traffic is [proxied through Cloudflare](/dns/manage-dns-records/reference/proxied-dns-records/).
+    - **Proxy status**: For `A`, `AAAA`, and `CNAME` records, decide whether hostname traffic is {{<glossary-tooltip term_id="proxy status" link="/dns/manage-dns-records/reference/proxied-dns-records/">}}proxied through Cloudflare{{</glossary-tooltip>}}.
     - **TTL**: Short for [*Time to Live*](/dns/manage-dns-records/reference/ttl/), this field controls how long each record is valid and — as a result — how long it takes for record updates to reach your end users.
     - **Comment** and **Tag**: [Record attributes](/dns/manage-dns-records/reference/record-attributes/) meant for your reference.
 
@@ -42,11 +42,9 @@ To create a DNS record in the dashboard:
 
 {{<tab label="api" no-code="true">}}
 
-To create records with the API, use a [POST request](/api/operations/dns-records-for-a-zone-create-dns-record).
+To create records with the API, use a [POST request](/api/operations/dns-records-for-a-zone-create-dns-record). For field definitions, select a record type under the request body specification.
 
 For specific API examples, refer to [DNS record types](/dns/manage-dns-records/reference/dns-record-types/).
-
-{{<render file="_api-field-definitions.md">}}
 
 {{</tab>}}
 {{</tabs>}}

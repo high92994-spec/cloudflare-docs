@@ -2,7 +2,6 @@
 pcx_content_type: concept
 title: WARP architecture
 weight: 5
-layout: single
 ---
 
 # WARP architecture
@@ -19,7 +18,7 @@ The WARP client allows organizations to have granular control over the applicati
 | -----------|----------|---------|
 | Device orchestration | HTTPS | Perform user registration, check device posture, apply WARP profile settings. |
 | [DoH](https://www.cloudflare.com/learning/dns/dns-over-tls/) | HTTPS | Send DNS requests to Gateway for DNS policy enforcement. |
-| Wireguard | UDP | Send IP packets to Gateway for network policy enforcement, HTTP policy enforcement, and private network access. |
+| WARP tunnel ([via WireGuard or MASQUE](/cloudflare-one/connections/connect-devices/warp/configure-warp/warp-settings/#device-tunnel-protocol)) | UDP | Send IP packets to Gateway for network policy enforcement, HTTP policy enforcement, and private network access. |
 
 ```mermaid
 flowchart LR
@@ -37,11 +36,11 @@ end
 end
 W<--Device orchestration-->A
 D<--DoH-->G
-V<--Wireguard-->N
+V<--WARP tunnel-->N
 N --> O[(Application)]
 ```
 
-Your [Split Tunnel](/cloudflare-one/connections/connect-devices/warp/configure-warp/route-traffic/split-tunnels/) configuration determines what traffic is sent down the Wireguard tunnel. Your [Local Domain Fallback](/cloudflare-one/connections/connect-devices/warp/configure-warp/route-traffic/local-domains/) configuration determines which DNS requests are sent to Gateway via DoH. Traffic to the [DoH endpoint](/cloudflare-one/connections/connect-devices/warp/deployment/firewall/#doh-ip) and [device orchestration API](/cloudflare-one/connections/connect-devices/warp/deployment/firewall/#client-orchestration-api) endpoint do not obey Split Tunnel rules, since those connections always operate outside of the Wireguard tunnel.
+Your [Split Tunnel](/cloudflare-one/connections/connect-devices/warp/configure-warp/route-traffic/split-tunnels/) configuration determines what traffic is sent down the WARP tunnel. Your [Local Domain Fallback](/cloudflare-one/connections/connect-devices/warp/configure-warp/route-traffic/local-domains/) configuration determines which DNS requests are sent to Gateway via DoH. Traffic to the [DoH endpoint](/cloudflare-one/connections/connect-devices/warp/deployment/firewall/#doh-ip) and [device orchestration API](/cloudflare-one/connections/connect-devices/warp/deployment/firewall/#client-orchestration-api) endpoint do not obey Split Tunnel rules, since those connections always operate outside of the WARP tunnel.
 
 Next, you will learn how WARP configures your operating system to apply your Local Domain Fallback and Split Tunnel routing rules. Implementation details differ between desktop and mobile clients.
 
@@ -65,7 +64,7 @@ Browsers with DoH configured will bypass the local DNS proxy. You may need to di
 {{</Aside>}}
 
 Based on your Local Domain Fallback configuration, WARP will either forward the request to Gateway for DNS policy enforcement or forward the request to your private DNS resolver.
-- Requests to Gateway are sent over our [DoH connection](#overview) (outside of the Wireguard tunnel).
+- Requests to Gateway are sent over our [DoH connection](#overview) (outside of the WARP tunnel).
 - Requests to your private DNS resolver are sent either inside or outside of the tunnel depending on your Split Tunnel configuration. For more information, refer to [How the WARP client handles DNS requests](/cloudflare-one/connections/connect-devices/warp/configure-warp/route-traffic/#how-the-warp-client-handles-dns-requests).
 
 ```mermaid
@@ -108,9 +107,9 @@ resolver #2
 {{</tab>}}
 {{<tab label="windows" no-code="true">}}
 
-On Windows, open a Powershell window and run `ipconfig`. The DNS servers should be set to WARP's local DNS proxy IPs.
+On Windows, open a PowerShell window and run `ipconfig`. The DNS servers should be set to WARP's local DNS proxy IPs.
 
-```bash
+```powershell
 ---
 highlight: 17-18
 ---
@@ -161,7 +160,7 @@ options trust-ad
 
 ### IP traffic
 
-When you turn on WARP, WARP makes three changes on the device to control if traffic is sent inside or outside of the Wireguard tunnel:
+When you turn on WARP, WARP makes three changes on the device to control if traffic is sent inside or outside of the WARP tunnel:
 
 - Creates a [virtual network interface](#virtual-interface).
 - Modifies the operating system [routing table](#routing-table) according to your Split Tunnel rules.
@@ -176,7 +175,7 @@ S -- No --> U["Virtual interface<br> (172.16.0.2)"] --> G[Cloudflare Gateway]
 
 #### Virtual interface
 
-Virtual interfaces allow the operating system to logically subdivide a physical interface, such as a network interface controller (NIC), into separate interfaces for the purposes of routing IP traffic. WARP’s virtual interface is what maintains the Wireguard connection between the device and Cloudflare. Its IP address is hardcoded as `172.16.0.2`.
+Virtual interfaces allow the operating system to logically subdivide a physical interface, such as a network interface controller (NIC), into separate interfaces for the purposes of routing IP traffic. WARP’s virtual interface is what maintains the WireGuard/MASQUE connection between the device and Cloudflare. By default, its IP address is hardcoded as `172.16.0.2`. You can use [**Override local interface IP**](/cloudflare-one/connections/connect-devices/warp/configure-warp/warp-settings/#override-local-interface-ip) to assign unique IPs per device.
 
 To view a list of all network interfaces on the operating system:
 
@@ -192,9 +191,9 @@ highlight: 4
 $ ifconfig
 <redacted>
 utun3: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 1280
-	inet 172.16.0.2 --> 172.16.0.2 netmask 0xffffffff 
-	inet6 fe80::f6d4:88ff:fe82:6d9e%utun3 prefixlen 64 scopeid 0x17 
-	inet6 2606:4700:110:8c7d:7369:7526:a59b:5636 prefixlen 128 
+	inet 172.16.0.2 --> 172.16.0.2 netmask 0xffffffff
+	inet6 fe80::f6d4:88ff:fe82:6d9e%utun3 prefixlen 64 scopeid 0x17
+	inet6 2606:4700:110:8c7d:7369:7526:a59b:5636 prefixlen 128
 	nd6 options=201<PERFORMNUD,DAD>
 ```
 
@@ -203,7 +202,7 @@ utun3: flags=8051<UP,POINTOPOINT,RUNNING,MULTICAST> mtu 1280
 
 On Windows, run `ipconfig`. When WARP is turned on, you will see an adapter called `CloudflareWARP` with IP address `172.16.0.2`.
 
-```bash
+```powershell
 ---
 highlight: 14
 ---
@@ -241,12 +240,12 @@ highlight: 5
 $ ip addr
 <redacted>
 3: CloudflareWARP: <POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP> mtu 1280 qdisc mq state UNKNOWN group default qlen 500
-    link/none 
+    link/none
     inet 172.16.0.2/32 scope global CloudflareWARP
        valid_lft forever preferred_lft forever
-    inet6 2606:4700:110:8a2e:a5f7:a8de:a1f9:919/128 scope global 
+    inet6 2606:4700:110:8a2e:a5f7:a8de:a1f9:919/128 scope global
        valid_lft forever preferred_lft forever
-    inet6 fe80::117e:276b:8a79:c498/64 scope link stable-privacy 
+    inet6 fe80::117e:276b:8a79:c498/64 scope link stable-privacy
        valid_lft forever preferred_lft forever
 ```
 
@@ -256,7 +255,7 @@ $ ip addr
 
 #### Routing table
 
-WARP edits the system routing table to control what traffic goes down the Wireguard tunnel to Gateway. The routing table indicates which network interface should handle packets to a particular IP address. By default, all traffic routes through WARP's virtual interface except for the IPs and domains on your Split Tunnel exclude list (which use the default interface on your device).
+WARP edits the system routing table to control what IP traffic goes to Gateway. The routing table indicates which network interface should handle packets to a particular IP address. By default, all traffic routes through WARP's virtual interface except for the IPs and domains on your Split Tunnel exclude list (which use the default interface on your device).
 
 You can verify that the routing table matches your Split Tunnel rules:
 
@@ -278,7 +277,7 @@ destination: 136.0.0.0
   interface: utun3
       flags: <UP,DONE,PRCLONING>
  recvpipe  sendpipe  ssthresh  rtt,msec    rttvar  hopcount      mtu     expire
-       0         0         0         0         0         0      1280         0 
+       0         0         0         0         0         0      1280         0
 ```
 
 In contrast, this DHCP address is excluded from WARP and uses the default interface:
@@ -287,14 +286,14 @@ In contrast, this DHCP address is excluded from WARP and uses the default interf
 ---
 highlight: 5
 ---
-$ route get 169.254.0.0   
+$ route get 169.254.0.0
    route to: 169.254.0.0
 destination: 169.254.0.0
        mask: 255.255.0.0
   interface: en0
       flags: <UP,DONE,CLONING,STATIC>
  recvpipe  sendpipe  ssthresh  rtt,msec    rttvar  hopcount      mtu     expire
-       0         0         0         0         0         0      1500   -210842 
+       0         0         0         0         0         0      1500   -210842
 ```
 
 {{</tab>}}
@@ -304,17 +303,17 @@ To view the entire routing table on Windows, run `netstat -r`.
 
 You can also search the routing table for an IP address. In this example, we see that traffic to `1.1.1.1` is sent through the WARP virtual interface:
 
-```bash
-PS C:/> Find-NetRoute -RemoteIPAddress "1.1.1.1" | Select-Object InterfaceAlias -Last 1
+```powershell
+PS C:\> Find-NetRoute -RemoteIPAddress "1.1.1.1" | Select-Object InterfaceAlias -Last 1
 
 InterfaceAlias
 --------------
 CloudflareWARP
 ```
 
-In contrast, this DHCP address is excluded from WARP and uses the default interface :
+In contrast, this DHCP address is excluded from WARP and uses the default interface:
 
-```bash
+```powershell
 PS C:\> Find-NetRoute -RemoteIPAddress "169.254.0.0" | Select-Object InterfaceAlias -Last 1
 
 InterfaceAlias
@@ -332,16 +331,16 @@ You can also search the routing table for an IP address. In this example, we see
 
 ```sh
 $ ip route get 1.1.1.1
-1.1.1.1 dev CloudflareWARP table 65743 src 172.16.0.2 uid 1000 
-    cache 
+1.1.1.1 dev CloudflareWARP table 65743 src 172.16.0.2 uid 1000
+    cache
 ```
 
 In contrast, this DHCP address is excluded from WARP and uses the default interface:
 
 ```sh
 $ ip route get 169.254.0.0
-169.254.0.0 dev ens18 src 172.24.8.6 uid 1000 
-    cache 
+169.254.0.0 dev ens18 src 172.24.8.6 uid 1000
+    cache
 ```
 
 {{</tab>}}

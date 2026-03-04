@@ -1,32 +1,29 @@
 ---
 title: Lists
 pcx_content_type: overview
-weight: 2
-layout: single
+weight: 1
 ---
 
 # Lists
 
-Use lists to refer to a group of items (such as IP addresses) collectively, by name, in rule expressions of Cloudflare products. You can create your own custom lists or use lists managed by Cloudflare, such as [Managed IP Lists](/waf/tools/lists/ip-lists/#managed-ip-lists).
+Use lists to refer to a group of items (such as IP addresses) collectively, by name, in rule expressions of Cloudflare products. You can create your own custom lists or use lists managed by Cloudflare, such as [Managed IP Lists](/waf/tools/lists/managed-lists/#managed-ip-lists).
 
 Lists have the following advantages:
 
-- When creating a rule, using a list is easier and less error-prone than adding a long list of items such as IP addresses to a rule expression.
-- When updating a set of rules that target the same group of IP addresses, using an IP List is easier and less error prone than editing multiple rules.
-- Lists are easier to read and more informative, particularly when you use descriptive names for your lists.
+{{<render file="_list-advantages.md" productFolder="waf">}}
 
-When you update the content of a list, any rules that use the list are automatically updated, so you can make a single change to your list rather than modify rules individually.
+## Supported lists
 
-Cloudflare stores your lists at the account level. You can use the same list in rules of different zones in your Cloudflare account.
+Cloudflare supports the following lists:
 
-## List types
+* [Custom lists](/waf/tools/lists/custom-lists/): Includes custom IP lists, hostname lists, and ASN lists.
+* [Managed Lists](/waf/tools/lists/managed-lists/): Lists managed and updated by Cloudflare, such as Managed IP Lists.
 
-Cloudflare supports the following types of lists:
+Refer to each page for details.
 
-* [IP Lists](/waf/tools/lists/ip-lists/)
-* [Bulk Redirect Lists](/rules/url-forwarding/bulk-redirects/concepts/#bulk-redirect-lists)
-
-Refer to the page about each list type for details.
+{{<Aside type="note">}}
+Bulk Redirects use [Bulk Redirect Lists](/rules/url-forwarding/bulk-redirects/concepts/#bulk-redirect-lists), a different type of list covered in the Rules documentation.
+{{</Aside>}}
 
 ## List names
 
@@ -38,7 +35,7 @@ The name of a list must comply with the following requirements:
 
 ### Create and edit lists
 
-You can [create lists in the Cloudflare dashboard](/rules/url-forwarding/bulk-redirects/create-dashboard/) or using the [Lists API](/waf/tools/lists/lists-api/).
+You can [create lists in the Cloudflare dashboard](/waf/tools/lists/create-dashboard/) or using the [Lists API](/waf/tools/lists/lists-api/).
 
 After creating a list, you can add and remove items from the list, but you cannot change the list name or type.
 
@@ -67,11 +64,9 @@ List availability varies according to the list type and your Cloudflare plan and
 
 {{<feature-table id="global_configurations.lists">}}
 
-The number of IP Lists you can create depends on the Cloudflare plans associated with the zones in your account. You can store up to a total of 10,000 items across all your lists, regardless of your plan.
+Notes:
 
-The Cloudflare Enterprise plan provides access to the Cloudflare Open Proxies Managed IP List. Other Managed IP Lists are available as part of Enterprise Security Bundles. For more information, contact your account team.
-
-For details on the availability of Bulk Redirect Lists, refer to the [Rules](/rules/url-forwarding/#availability) documentation.
+{{<render file="_lists-notes.md" productFolder="waf">}}
 
 ---
 

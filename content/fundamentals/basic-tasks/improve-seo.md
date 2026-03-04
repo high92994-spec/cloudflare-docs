@@ -23,7 +23,7 @@ Several Cloudflare features improve Search Engine site rankings. However, meanin
 
 Since at least 2010, Google has publicly stated that [site speed affects your Google ranking](https://webmasters.googleblog.com/2010/04/using-site-speed-in-web-search-ranking.html).
 
-Cloudflare offers multiple features to [optimize site performance](/learning-paths/optimize-site-speed/).
+Cloudflare offers multiple features to [optimize site performance](/speed/).
 
 ### Enable HTTPS
 
@@ -42,7 +42,7 @@ With [Crawler Hints](/cache/advanced-configuration/crawler-hints/), search engin
 
 Automatic Signed Exchanges (SXGs) is an open web platform specification developed by Google to verify a cached version of a website.
 
-When you enable [signed exchanges](https://support.cloudflare.com/hc/articles/4411075595661), your site will load faster when linked to from a site supporting SXG. Since many search engines use page load times to determine search result ranking, SXGs can provide an SEO boost.
+When you enable [signed exchanges](/speed/optimization/other/signed-exchanges/), your site will load faster when linked to from a site supporting SXG. Since many search engines use page load times to determine search result ranking, SXGs can provide an SEO boost.
 
 ## Troubleshooting
 
@@ -50,11 +50,11 @@ Depending on your domain's security settings, you might accidentally block searc
 
 If you notice SEO issues, make sure your:
 
-- [WAF custom rules](/firewall/known-issues-and-faq/#caution-about-potentially-blocking-bots) are allowing **Verified Bots**.
+- [WAF custom rules](/waf/troubleshooting/faq/#caution-about-potentially-blocking-bots) are allowing **Verified Bots**.
 - [Rate limiting rules](/waf/rate-limiting-rules/) are allowing **Verified Bots**.
 - [Bot protection](/bots/concepts/bot/#verified-bots) settings are not blocking **Verified Bots**.
 
-If you still notice issues with search engine crawlers, refer to our [Troubleshooting guide](https://support.cloudflare.com/hc/articles/200169806).
+If you still notice issues with search engine crawlers, refer to our [Troubleshooting guide](/support/troubleshooting/general-troubleshooting/troubleshooting-crawl-errors/).
 
 ## Common misconceptions
 

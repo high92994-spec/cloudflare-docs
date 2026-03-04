@@ -10,11 +10,13 @@ meta:
 
 This page explains how you can enable [multi-signer DNSSEC](/dns/dnssec/multi-signer-dnssec/) with Cloudflare, using the [model 2](/dns/dnssec/multi-signer-dnssec/about/) as described in [RFC 8901](https://www.rfc-editor.org/rfc/rfc8901.html).
 
-{{<Aside type="note">}}
-Note that this process requires that your other DNS provider(s) also support multi-signer DNSSEC.
-{{</Aside>}}
+## Before you begin
 
-Although you can complete a few steps via the user interface, currently the whole process can only be completed using the API.
+Note that:
+
+- This process requires that your other DNS provider(s) also support multi-signer DNSSEC.
+- Although you can complete a few steps via the dashboard, currently the whole process can only be completed using the API.
+- Enabling **DNSSEC** and **Multi-signer DNSSEC** in [**DNS** > **Settings**](https://dash.cloudflare.com/?to=/:account/:zone/dns/settings) only replaces the first step in [1. Set up Cloudflare zone](#1-set-up-cloudflare-zone). You still have to follow the rest of this tutorial to complete the setup.
 
 ## 1. Set up Cloudflare zone
 
@@ -25,10 +27,11 @@ The following steps also apply if you use [Cloudflare as a secondary DNS provide
 1. Use the [Edit DNSSEC Status endpoint](/api/operations/dnssec-edit-dnssec-status) to enable DNSSEC and activate multi-signer DNSSEC for your zone. This is done by setting `status` to `active` and `dnssec_multi_signer` to `true`, as in the following example.
 
 ```bash
-$ curl --request PATCH 'https://api.cloudflare.com/client/v4/zones/{zone_id}/dnssec' \ 
---header 'X-Auth-Email: <EMAIL>' \ 
---header 'X-Auth-Key: <KEY>' \ 
---header 'Content-Type: application/json' \ 
+curl --request PATCH \
+'https://api.cloudflare.com/client/v4/zones/{zone_id}/dnssec' \
+--header "X-Auth-Email: <EMAIL>" \
+--header "X-Auth-Key: <API_KEY>" \
+--header "Content-Type: application/json" \
 --data '{
   "status": "active",
   "dnssec_multi_signer": true
@@ -38,14 +41,14 @@ $ curl --request PATCH 'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns
 2. Add the ZSK(s) of your external provider(s) to Cloudflare by creating a DNSKEY record on your zone.
 
 ```bash
-$ curl --request POST 'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records' \
---header 'X-Auth-Email: <EMAIL>' \
---header 'X-Auth-Key: <KEY>' \
---header 'Content-Type: application/json' \
+curl 'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records' \
+--header "X-Auth-Email: <EMAIL>" \
+--header "X-Auth-Key: <API_KEY>" \
+--header "Content-Type: application/json" \
 --data '{
   "type": "DNSKEY",
   "name": "<ZONE_NAME>",
-  "data": { 
+  "data": {
     "flags": 256,
     "protocol": 3,
     "algorithm": 13,
@@ -58,34 +61,35 @@ $ curl --request POST 'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_
 3. Add your external provider(s) nameservers as NS records on your zone apex.
 
 ```bash
-curl --request PATCH 'https://api.cloudflare.com/client/v4/zones/{zone_id}/dnssec' \
+curl 'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records' \
 --header "X-Auth-Email: <EMAIL>" \
---header "X-Auth-Key: <KEY>" \
+--header "X-Auth-Key: <API_KEY>" \
 --header "Content-Type: application/json" \
 --data '{
-  "type": "NS",    
+  "type": "NS",
   "name": "<ZONE_NAME>",
   "content": "<NS_DOMAIN>",
   "ttl": 86400
 }'
 ```
 
-4. Enable the usage of the nameservers you added in the previous step by using an API request, as in the following example.
+4. Enable the usage of the nameservers you added in the previous step by using the API request below. Alternatively, go to [**DNS** > **Settings**](https://dash.cloudflare.com/?to=/:account/:zone/dns/settings) and enable **Multi-provider DNS**.
 
 {{<Aside type="warning">}}
-Unless you use [Cloudflare as a secondary DNS provider](/dns/zone-setups/zone-transfers/cloudflare-as-secondary/), this step is required.
+This step is required if you are using Cloudflare as a primary DNS provider - without enabling this setting, Cloudflare will ignore any `NS` records created on the zone apex. This means that responses to DNS queries made to the zone apex and requesting `NS` records will only contain Cloudflare nameservers.
 
-Without enabling this setting, Cloudflare always responds with Cloudflare nameservers for DNS queries to the zone apex requesting the NS record type.
+If you are using [Cloudflare as a secondary DNS provider](/dns/zone-setups/zone-transfers/cloudflare-as-secondary/), this step is not necessary.
+
 {{</Aside>}}
 
 ```bash
-$ curl --request PATCH 'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_settings/use_apex_ns' \
---header 'X-Auth-Email: <EMAIL>' \
---header 'X-Auth-Key: <KEY>' \
---header 'Content-Type: application/json' \
+curl --request PATCH \
+'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_settings' \
+--header "X-Auth-Email: <EMAIL>" \
+--header "X-Auth-Key: <API_KEY>" \
+--header "Content-Type: application/json" \
 --data '{
-  "id": "use_apex_ns",
-  "value": true
+  "multi_provider": true
 }'
 ```
 
@@ -96,14 +100,14 @@ $ curl --request PATCH 'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns
 API example:
 
 ```bash
-$ curl 'https://api.cloudflare.com/client/v4/zones/{zone_id}/dnssec/zsk' \
---header 'X-Auth-Email: <EMAIL>' \
---header 'X-Auth-Key: <KEY>'
+curl 'https://api.cloudflare.com/client/v4/zones/{zone_id}/dnssec/zsk' \
+--header "X-Auth-Email: <EMAIL>" \
+--header "X-Auth-Key: <API_KEY>"
 ```
 
 Command line query example:
 
-```bash
+```sh
 $ dig <ZONE_NAME> dnskey @<CLOUDFLARE_NAMESERVER> +noall +answer | grep 256
 ```
 

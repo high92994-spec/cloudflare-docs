@@ -12,7 +12,7 @@ While the Brand Protection tool is in beta, you will need to request access by f
 
 {{</Aside>}}
 
-Common misspellings (`cloudfalre.com`) and concatenation of services (`cloudflare-okta.com`) are often registered by attackers to trick unsuspecting victims into submitting private information such as passwords. Brand Protection gives you the ability to search for new domains that may be attempting to impersonate your brand. Our system allows you to save search queries that run continuously and alert you if any new domains match those queries.
+{{<render file="_brand-protection-definition.md">}}
 
 ## Domain search
 
@@ -33,20 +33,31 @@ If a brand phrase or search term has less than five characters, you can only cho
 
 In the section **Monitored queries**, you can check all the queries that you selected to monitor. You can delete, clone, or create notifications for a query. Refer to [Brand Protection Alerts](#brand-protection-alerts) to set up notifications.
 
+## Logo queries
+
+To set up a new logo query:
+
+1. Go to **Security Center** > **Monitor Images** and select **Add logo**.
+2. Add a name for your query and upload your logo. Only the `.png`, `.jpeg`, and `.jpg` file extensions are supported.
+3. Select **Save logo**.
+
+The browser will return to the **Monitor Images** overview page, where you can access your query and configure notifications.
+
+
 ## Investigate a query
 
 To investigate a query:
 
-1. Go to the **Monitored queries** section to view all your queries.
+1. Go to the **Monitored strings** or **Monitor Logos** section to view all your queries.
 2. Select a monitored query to inspect all the domains that matched your query.
-3. Next to the domain, select **Investigate**. This will take you to the **Investigate** section in the sidebar.
-4. In this section, you have the **Domain overview**, the **WHOIS** section that provides details about the date the domain was created, registrant and nameservers, and the **Domain history** that provides information on the domain category and when it was last changed. Refer to [Domain categories](/cloudflare-one/policies/gateway/domain-categories/#security-risk-subcategories) for more details.
+3. Next to the domain, select **Domain** or **URL**. This will trigger a search on the [**Investigate**](/security-center/investigate/) section in a separate tab. 
+4. In this section, you have the **Domain overview**, the **WHOIS** section that provides details about the date the domain was created, registrant and nameservers, and the **Domain history** that provides information on the domain category and when it was last changed. Refer to [Investigate threats](/security-center/investigate/investigate-threats/) for more details.
 
 ## Brand Protection Alerts
 
-Brand Protection works with Cloudflare’s ANS (Alerts Notification Service) to provide configurable alerts when new domains are detected. 
+{{<render file="_brand-protection-alerts.md">}}
 
-Any matches that are found during the new domain search are then inserted into an internal alerts table which triggers an alert for the user. This allows you to receive real-time notifications and take immediate action to investigate and potentially block any suspicious domains that may be attempting to impersonate your brand.
+{{<available-notifications product="Security Center">}}
 
 To set a Brand Protection Alert:
 
@@ -65,4 +76,5 @@ Manage your notifications in the **All notifications** tab. You can disable, edi
 
 ## Limitations
 
-While this product is in beta, all Cloudflare paid plans have access to the functionality with limits according to the plans. Professional and Business customers have access to a limited number of private scans and on-demand searches, while Enterprise customers and Cloudforce One subscribers will have higher limits and the ability to save queries and create notifications for when there are new domain matches.
+- While this product is in beta, all Enterprise customers and Cloudforce One subscribers have access to Brand Protection. Enterprise customers are entitled to one saved query per Enterprise zone on their account.
+- You may only use the Brand Protection search tools to search for domains that may be attempting to impersonate your brand or a brand that has authorized you to conduct such search on its behalf.

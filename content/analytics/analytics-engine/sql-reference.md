@@ -173,8 +173,7 @@ FROM temperature_readings
 GROUP BY probe_name
 ```
 
-In the usual case the `<expression>` can just be a column name but it is also possible to suppy a complex expression here.
-Multiple expressions or column names can be supplied separated by commas.
+In the usual case the `<expression>` can just be a column name but it is also possible to supply a complex expression here. Multiple expressions or column names can be supplied separated by commas.
 
 ### ORDER BY clause
 
@@ -688,8 +687,6 @@ The following operators are supported:
 
 ### Arithmetic operators
 
-{{<table-wrap>}}
-
 | Operator  | Description         |
 |-----|----------|
 | `+` | addition |
@@ -698,12 +695,8 @@ The following operators are supported:
 | `/` | division |
 | `%` | modulus |
 
-{{</table-wrap>}}
-
 
 ### Comparison operators
-
-{{<table-wrap>}}
 
 | Operator  | Description |
 |-----|----------|
@@ -716,13 +709,9 @@ The following operators are supported:
 | `IN` | true if the preceding expression's value is in the list<br>`column IN ('a', 'list', 'of', 'values')` |
 | `NOT IN` | true if the preceding expression's value is not in the list<br>`column NOT IN ('a', 'list', 'of', 'values')` |
 
-{{</table-wrap>}}
-
 We also support the `BETWEEN` operator for checking a value is in an inclusive range: `a [NOT] BETWEEN b AND c`.
 
 ### Boolean operators
-
-{{<table-wrap>}}
 
 | Operator  | Description |
 |-----|----------|
@@ -730,22 +719,14 @@ We also support the `BETWEEN` operator for checking a value is in an inclusive r
 | `OR` | boolean "OR" (true if either side or both sides are true) |
 | `NOT` | boolean "NOT" (true if following expression is false and visa-versa) |
 
-{{</table-wrap>}}
-
 ### Unary operators
-
-{{<table-wrap>}}
 
 | Operator  | Description |
 |-----|----------|
 | `-` | negation operator (for example, `-42`) |
 
-{{</table-wrap>}}
-
 
 ## Literals
-
-{{<table-wrap>}}
 
 | Type | Syntax |
 |------|---------------|
@@ -754,8 +735,3 @@ We also support the `BETWEEN` operator for checking a value is in an inclusive r
 | string | `'so long and thanks for all the fish'` |
 | boolean | `true` or `false` |
 | time interval | `INTERVAL '42' DAY`<br>Intervals of `YEAR`, `MONTH`, `DAY`, `HOUR`, `MINUTE` and `SECOND` are supported |
-
-{{</table-wrap>}}
-
-
-

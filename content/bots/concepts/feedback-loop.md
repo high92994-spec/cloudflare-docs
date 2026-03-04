@@ -5,7 +5,7 @@ title: Bot Feedback Loop
 
 # Bot Feedback Loop
 
-The Bot Feedback Loop is a way for customers to send Cloudflare direct feedback in the case of Bot Management potentially scoring a request incorrectly. When a customer submits a False Negative or a False Positive report, Cloudflare manually analyzes this data and uses it as a training dataset for our next Machine Learning model.
+The Bot Feedback Loop is a way for customers to send Cloudflare direct feedback in the case of Bot Management potentially {{<glossary-tooltip term_id="bot score" link="/bots/concepts/bot-score/">}}scoring{{</glossary-tooltip>}} a request incorrectly. When a customer submits a False Negative or a False Positive report, Cloudflare manually analyzes this data and uses it as a training dataset for our next Machine Learning model.
 
 ## Availability
 
@@ -49,40 +49,40 @@ If Cloudflare is unable to detect a portion of automated traffic on your site, s
 
 ### Create a feedback report
 
-```json
-curl -X POST 'https://api.cloudflare.com/client/v4/zones/023e105f4ecef8ad9ca31a8372d0c353/bot_management/feedback' \
-     -H "X-Auth-Email: user@example.com" \
-     -H "X-Auth-Key: c2547eb745079dac9320b638f5e225cf483cc5cfdda41" \
-     -H "Content-Type: application/json" \
--d '{
-    "type": "false_positive",
-    "description": "Legitimate customers having low score",
-    "expression": "(cf.bot_management.score le 46 and ip.geoip.asnum eq 132892 and http.host eq \"api-discovery.theburritobot.com\" and cf.bot_management.ja3_hash eq \"3fed133de60c35724739b913924b6c24\")",
-    "first_request_seen_at": "2022-08-01T00:00:00Z",
-    "last_request_seen_at": "2022-08-10T00:00:00Z",
-    "requests": 100,
-    "requests_by_score": {
-      "1": 50,
-      "10": 50
-    },
-    "requests_by_score_src": {
-      "heuristics": 25,
-      "machine_learning": 75
-    },
-    "requests_by_attribute": {
-      "topIPs": [
-        {
-          "metric": "10.75.34.1",
-          "requests": 100
-        }
-      ],
-      "topUserAgents": [
-        {
-          "metric": "curl/7.68.0",
-          "requests": 100
-        }
-      ]
-    }
+```bash
+curl 'https://api.cloudflare.com/client/v4/zones/{zone_id}/bot_management/feedback' \
+--header "X-Auth-Email: <EMAIL>" \
+--header "X-Auth-Key: <API_KEY>" \
+--header "Content-Type: application/json" \
+--data '{
+  "type": "false_positive",
+  "description": "Legitimate customers having low score",
+  "expression": "(cf.bot_management.score le 46 and ip.geoip.asnum eq 132892 and http.host eq \"api-discovery.theburritobot.com\" and cf.bot_management.ja3_hash eq \"3fed133de60c35724739b913924b6c24\")",
+  "first_request_seen_at": "2022-08-01T00:00:00Z",
+  "last_request_seen_at": "2022-08-10T00:00:00Z",
+  "requests": 100,
+  "requests_by_score": {
+    "1": 50,
+    "10": 50
+  },
+  "requests_by_score_src": {
+    "heuristics": 25,
+    "machine_learning": 75
+  },
+  "requests_by_attribute": {
+    "topIPs": [
+      {
+        "metric": "10.75.34.1",
+        "requests": 100
+      }
+    ],
+    "topUserAgents": [
+      {
+        "metric": "curl/7.68.0",
+        "requests": 100
+      }
+    ]
+  }
 }'
  ```
 
@@ -93,15 +93,14 @@ Null
 
 ### List feedback reports
 
- ```json
- # Command
-curl -X GET 'https://api.cloudflare.com/client/v4/zones/4e6d50a41172bca54f222576aec3fc2b/bot_management/feedback' \
-     -H "X-Auth-Email: user@example.com" \
-     -H "X-Auth-Key: c2547eb745079dac9320b638f5e225cf483cc5cfdda41" \
-     -H "Content-Type: application/json"
+ ```bash
+curl 'https://api.cloudflare.com/client/v4/zones/{zone_id}/bot_management/feedback' \
+--header "X-Auth-Email: <EMAIL>" \
+--header "X-Auth-Key: <API_KEY>"
 ```
+
 ```json
- # Output
+// Output
 [
   {
     "created_at": "2022-08-19T00:05:24.749712Z",
@@ -217,14 +216,13 @@ The instructions below apply to Enterprise subscription with Bot Management only
 
 After submitting a false positive, you can explicitly allow the traffic if you are confident that this traffic source cannot be used for abuse in the future. To allow traffic, you can create a WAF custom rule with a [Skip the remaining custom rules](/waf/custom-rules/skip/options/) action that matches the characteristics of your false positive report. We recommend any skip rule that you create uses the most narrow possible scope, including restricting the request methods and URIs that the expected traffic has access to, to limit potential abuse.
 
-* Allowing a **[JA3 fingerprint](/bots/concepts/ja3-fingerprint/)**:  If you want to allow access to a stable software client that does not come from a dedicated IP, you can do so by looking up the JA3 fingerprint(s) used by that client in the Bot Analytics dashboard, and creating a WAF custom rule to allow traffic based on that JA3 fingerprint. JA3 fingerprints will only match a client’s TLS library, so be cautious in looking for both overlap with other clients and with variation based on the operating system. <br><br>Cloudflare does not recommend relying on JA3 rules for mobile applications that may be abused. If you have questions about how to securely allow traffic from your mobile application, please contact your account team.
+* Allowing a **[JA3/JA4 fingerprint](/bots/concepts/ja3-ja4-fingerprint/)**:  If you want to allow access to a stable software client that does not come from a dedicated IP, you can do so by looking up the JA3 fingerprint(s) used by that client in the Bot Analytics dashboard, and creating a WAF custom rule to allow traffic based on that JA3 fingerprint. JA3 fingerprints will only match a client’s TLS library, so be cautious in looking for both overlap with other clients and with variation based on the operating system. <br><br>Cloudflare does not recommend relying on JA3 rules for mobile applications that may be abused. If you have questions about how to securely allow traffic from your mobile application, please contact your account team.
 
 {{<Aside type="note">}}
 The instructions below apply to Enterprise subscription with Bot Management, Bot Fight Mode and Super Bot Fight Mode.
 {{</Aside>}}
 
 * Allowing an **IP address**: Only use an IP address to allow traffic if the IP is a dedicated resource that belongs only to the traffic source you wish to allow. <br>If the traffic you want to allow shares an IP with other traffic sources, or if the IP changes frequently, consider an alternative to allowing by IP address.
-
 
 ## Recommendations after submitting a false negative
 

@@ -1,9 +1,10 @@
 ---
 title: HuggingFace
 pcx_content_type: get-started
-weight: 4
 ---
 
 # HuggingFace
+[HuggingFace](https://huggingface.co/) helps users build, deploy and train machine learning models.
+
 
 {{<render file="_huggingface.md">}}

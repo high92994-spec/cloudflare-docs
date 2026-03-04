@@ -1,20 +1,27 @@
 ---
 title: Search
 pcx_content_type: concept
-layout: single
 weight: 1
 meta:
-    description: Search for messages with a detection disposition or that have been processeded by Area 1.
+    description: Search for messages with a detection disposition or that have been processeded by Cloud Email Security (formerly Area 1).
 ---
 
 # Search
 
-You can search for emails that have been processed by Area 1, whether they are marked with a [detection disposition](/email-security/reference/dispositions-and-attributes/) or not.
+{{<Aside type="warning" header="Area 1 has been renamed">}}
+
+{{<render file="rename-area1-to-ces.md">}}
+
+{{</Aside>}}
+
+You can search for emails that have been processed by Cloud Email Security (formerly Area 1), whether they are marked with a {{<glossary-tooltip term_id="disposition" link="/email-security/reference/dispositions-and-attributes/">}}detection disposition{{</glossary-tooltip>}} or not.
 
 There are two ways for searching emails:
 
 - **Fielded Search**: Presents you with fields where you can enter search terms.
 - **Freeform Search**: Has one search field where you can construct your own search query, like `My great products`.
+
+{{<Aside type="note">}} {{<render file="_timestamp.md">}} {{</Aside>}}
 
 ## Search terms
 
@@ -26,7 +33,7 @@ For more exact matches, use the named fields in **Fielded Search** to denote whi
 
 ## Fielded Search
 
-1. Log in to the [Area 1 dashboard](https://horizon.area1security.com/).
+1. Log in to the [Cloud Email Security dashboard](https://horizon.area1security.com/).
 2. Select the **Search** bar.
 3. Fill out one or more of the following fields. Filling multiple fields is the equivalent of adding the `AND` operator between the following terms:
 	- **Terms**: Searches for terms in any of the available fields. If you want to search for a message that matches multiple recipients, use this field. Only one value can be specified in the **From** and **To** fields.
@@ -41,7 +48,7 @@ For more exact matches, use the named fields in **Fielded Search** to denote whi
 
 ## Freeform Search
 
-1. Log in to the [Area 1 dashboard](https://horizon.area1security.com/).
+1. Log in to the [Cloud Email Security dashboard](https://horizon.area1security.com/).
 2. Select the **Search bar** > **Freeform Search**.
 3. Build your search query — for example, `My great products`. The system will return all the emails that fit the query.
 

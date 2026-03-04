@@ -6,48 +6,32 @@ title: Security Level
 
 # Security Level
 
-Cloudflare's **Security Level** uses the IP reputation of a visitor to decide whether to present a [Managed Challenge](/firewall/cf-firewall-rules/cloudflare-challenges/#managed-challenge-recommended) page. Once the visitor enters the correct Managed Challenge, they receive the appropriate website resources.
-
-{{<Aside type="note">}}
-When [I'm Under Attack mode](/fundamentals/reference/under-attack-mode/) is enabled, Security Level presents a JS challenge page.
-{{</Aside>}}
+{{<render file=_security-level-description.md productFolder="waf">}}
 
 ---
 
-## Security levels
-
-IP reputation is calculated based on [Project Honeypot](https://www.projecthoneypot.org/), external public IP information, as well as internal threat intelligence from our [WAF managed rules](/waf/reference/legacy/old-waf-managed-rules/) and [DDoS](/ddos-protection/about/).
-
-| Security Level | Threat Scores | Description |
-| --- | --- | --- |
-| Off (Enterprise customers only) | N/A | Does not challenge IP addresses. |
-| Essentially off | greater than 49 | Only challenges IP addresses with the worst reputation. |
-| Low | greater than 24 | Challenges only the most threatening visitors. |
-| Medium | greater than 14 | Challenges both moderate threat visitors and the most threatening visitors. |
-| High | greater than 0 | Challenges all visitors that exhibit threatening behavior within the last 14 days. |
-| I’m Under Attack! | N/A | Only for use if your website is currently under a DDoS attack. |
+{{<render file=_security-level-scores.md productFolder="waf">}}
 
 ---
 
 ## Customize security level
 
-Cloudflare sets **Security Level** to _Medium_ by default.
+The default security level is _Medium_.
 
 ### Update globally
 
-To update the Security Level for your entire zone:
+To update the security level for your entire zone:
 
-1. Log into the [Cloudflare dashboard](https://dash.cloudflare.com).
-2. Select your account and zone.
-3. Go to **Security** > **Settings**.
-4. For **Security Level**, select an option.
+1. Log into the [Cloudflare dashboard](https://dash.cloudflare.com), and select your account and zone.
+2. Go to **Security** > **Settings**.
+3. For **Security Level**, select an option.
 
 ### Update selectively
 
-If you wanted to set the Security level more selectively:
+To set the security level more selectively, do one of the following:
 
-- Configure it via a [Configuration Rule](/rules/configuration-rules/).
-- Use the **Threat Score** as a **Field** criteria within [custom rules](/waf/custom-rules/).
+- Configure it via a [configuration rule](/rules/configuration-rules/).
+- Use the **Threat Score** as a **Field** criteria within [custom rules](/waf/custom-rules/). If you are using the Expression Editor, use the `cf.threat_score` field.
 
 ---
 
@@ -57,4 +41,4 @@ To prevent bot IPs from attacking a website:
 - A new website owner might set a _Medium_ or _High_ **Security Level** and lower [**Challenge Passage**](/waf/tools/challenge-passage/) to a value below **30 minutes** to ensure that Cloudflare is constantly protecting the site.
 - An experienced website administrator confident in their security settings might set **Security Level** to _Essentially Off_ or _Low_ while setting a higher [**Challenge Passage**](/waf/tools/challenge-passage/) for a week, month, or even year to provide a less obtrusive visitor experience.
 
-Only use [**I'm Under Attack!**](/fundamentals/reference/under-attack-mode/) mode when a website is under a DDoS attack. **I'm Under Attack!** mode may affect some actions on your domain, such as your API traffic.  Set a custom **Security Level** for your API or any other part of your domain by creating a [Configuration Rule](/rules/configuration-rules/) for that portion of your site traffic.
+You can also create [WAF custom rules](/waf/custom-rules/) to protect sensitive areas of your website — like comment form pages or login forms — using the [threat score](#threat-score) in your rule expression. The flexibility of custom rules allows you to select the action to take (for example, challenge or block) and exclude specific IP addresses.

@@ -1,13 +1,14 @@
 ---
 type: example
-summary: Connect Hyperdrive to a Neon database instance.
-pcx_content_type: configuration
+summary: Connect Hyperdrive to a Neon Postgres database.
+pcx_content_type: example
 title: Connect to Neon
 weight: 4
-layout: example
 ---
 
-This example shows you how to connect Hyperdrive to a [Neon](https://neon.tech/) database instance.
+# Connect to Neon
+
+This example shows you how to connect Hyperdrive to a [Neon](https://neon.tech/) Postgres database.
 
 ## 1. Allow Hyperdrive access
 

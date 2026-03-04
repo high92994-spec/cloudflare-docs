@@ -1,21 +1,37 @@
 ---
 pcx_content_type: reference
 title: Identity-based policies
-weight: 9
+weight: 10
 ---
 
 # Identity-based policies
 
 With Cloudflare Zero Trust, you can create Secure Web Gateway policies that filter outbound traffic down to the user identity level. To do that, you can build DNS, HTTP or Network policies using a set of [identity-based selectors](#identity-based-selectors). These selectors require you to deploy the Zero Trust WARP client in [Gateway with WARP mode](/cloudflare-one/connections/connect-devices/warp/configure-warp/warp-modes/).
 
+You may also filter outbound traffic based on additional signals from [device posture checks](/cloudflare-one/identity/devices/).
+
 ## Gateway identity checks
 
 Gateway checks identity when a user logs in or re-authenticates. To check your users' identities and require re-authentication at regular intervals, you can [enforce a WARP client session duration](/cloudflare-one/connections/connect-devices/warp/configure-warp/warp-sessions/).
 
-If you add or remove a user from a group in your IdP, Gateway will not detect these changes until the user re-authenticates to your Zero Trust instance. There are two ways a user can re-authenticate:
+Unless you use an [IdP that supports SCIM provisioning](#automatic-scim-idp-updates), Gateway will not detect when you add or remove a user from a group in your IdP until the user re-authenticates to your Zero Trust instance. There are two ways a user can re-authenticate:
 
 - Log out from an Access-protected application and log back in.
 - In their WARP client settings, select **Preferences** > **Account** > **Re-Authenticate Session**. This will open a browser window and prompt the user to log in.
+
+To view the identity that Gateway will use when evaluating policies, check the [user registry](/cloudflare-one/insights/logs/users/).
+
+### Automatic SCIM IdP updates
+
+Gateway will automatically detect changes in user name, title, and group membership for IdPs configured with System for Cross-domain Identity Management (SCIM) provisioning. IdPs that support SCIM include:
+
+{{<render file="access/_scim-supported-idps.md">}}
+
+For more information, refer to [SCIM provisioning](/cloudflare-one/identity/users/scim/).
+
+### Extended email addresses
+
+{{<render file="gateway/_extended-email.md">}}
 
 ## Identity-based selectors
 
@@ -23,9 +39,9 @@ If you add or remove a user from a group in your IdP, Gateway will not detect th
 
 Specify a value from the SAML Attribute Assertion.
 
-| UI name         | API example                                 |
-| --------------- | ------------------------------------------- |
-| SAML Attributes | `identity.saml_attributes == "\"finance\""` |
+| UI name         | API example                                       |
+| --------------- | ------------------------------------------------- |
+| SAML Attributes | `identity.saml_attributes == "\"group=finance\""` |
 
 ### User Email
 
@@ -57,7 +73,7 @@ Use this selector to create identity-based Gateway rules based on an IdP group n
 
 | UI name          | API example                             |
 | ---------------- | --------------------------------------- |
-| User Group Email | `identity.groups.name == "\"finance\""` |
+| User Group Names | `identity.groups.name == "\"finance\""` |
 
 ### User Name
 
@@ -89,8 +105,8 @@ Because IdPs expose user groups in different formats, reference the list below t
 
 If you enabled user and group synchronization with [SCIM](/cloudflare-one/identity/idp-integration/azuread/#synchronize-users-and-groups), the synchronized groups will appear under _User Group Names_:
 
-| Selector       | Value                                 |
-| -------------- | ------------------------------------- |
+| Selector         | Value        |
+| ---------------- | ------------ |
 | User Group Names | `SCIM group` |
 
 ### GitHub
@@ -129,7 +145,7 @@ For a [generic SAML provider](/cloudflare-one/identity/idp-integration/generic-s
 
 | Selector        | Attribute name | Attribute value |
 | --------------- | -------------- | --------------- |
-| SAML Attributes | `department`    | `Marketing`     |
+| SAML Attributes | `department`   | `Marketing`     |
 
 ### Generic OIDC IdP
 

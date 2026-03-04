@@ -11,7 +11,7 @@ A Waiting Room Bypass Rule is a type of Waiting Room Rule built on Cloudflare’
 To indicate where you want your bypass rules to apply, write [custom logic](/ruleset-engine/rules-language/) using the [fields](/ruleset-engine/rules-language/fields/) available via the Cloudflare Ruleset Engine from the following fields categories:
 
 - [Standard fields](/ruleset-engine/rules-language/fields/#standard-fields)
-- [Dynamic fields](/ruleset-engine/rules-language/fields/#dynamic-fields) except `cf.threat_score` and fields starting with `cf.bot_management` 
+- [Dynamic fields](/ruleset-engine/rules-language/fields/#dynamic-fields) except `cf.threat_score` and fields starting with `cf.bot_management`
 - [URI and argument value fields](/ruleset-engine/rules-language/fields/#uri-argument-and-value-fields)
 - [HTTP request header fields](/ruleset-engine/rules-language/fields/#http-request-header-fields)
 - [HTTP request body fields](/ruleset-engine/rules-language/fields/#http-request-body-fields)
@@ -22,10 +22,10 @@ Please be advised that the waiting room will not apply to all the traffic that m
 
 ## Common Use Cases
 
-- **Path/URL Exclusion**: Bypass specific paths or URLs under the path you have configured for your waiting room, if you do not want your waiting room to apply to these paths. 
-- **Administrative Bypass**: Allow internal site administrators to always bypass the waiting room, commonly identified by IP addresses. 
+- **Path/URL Exclusion**: Bypass specific paths or URLs under the path you have configured for your waiting room, if you do not want your waiting room to apply to these paths.
+- **Administrative Bypass**: Allow internal site administrators to always bypass the waiting room, commonly identified by IP addresses.
 - **Geo-targeting**: Exclude certain countries from being queued.
-- **Query String Exclusion**: Exclude specific query strings under the path you have configured for your waiting room. 
+- **Query String Exclusion**: Exclude specific query strings under the path you have configured for your waiting room.
 - **Exclude file extensions**: Prevent waiting room from applying to certain file extensions, such as `.js` that you utilize on your waiting room HTML template so that they render properly.
 
 ### A note on subrequests
@@ -70,56 +70,47 @@ When creating a Bypass Waiting Room Rule via API, make sure you:
 Create a waiting room rule by appending the following endpoint in the Waiting Room API to the Cloudflare API base URL. New waiting room rules will be added after any existing rules.
 
 ```txt
-POST zones/:zone_identifier/waiting_rooms/:waiting_room_id/rules
+POST zones/{zone_id}/waiting_rooms/{room_id}/rules
 ```
 
 Configure your bypass rule with the following required and optional parameters:
 
-- **Description** (optional) - Give your rule a description to help keep a record of the purpose of this bypass rule.  
+- **Description** (optional) - Give your rule a description to help keep a record of the purpose of this bypass rule.
 - **Expression** (required) - Define the rule expression indicating which traffic to apply the bypass rule to.
 - **Action** (required) - Define the action to take when expression evaluates to true. Set this to `bypass_waiting_room`.
 - **Enabled** (optional) - This will default to true. If you do not wish to deploy your rule, you must set this to false.
 
 ### ​​API Examples
 
-<details>
-<summary>Bypass a path under your waiting room and all of its subpaths</summary>
-<div>
+{{<details header="Bypass a path under your waiting room and all of its subpaths">}}
 
 If your waiting room is configured at `example.com/` and you would like all traffic visiting `example.com/bypassme` and all of its subpaths. In this example, we also want to ensure any subrequests of `js`, `css`, or `png` from also bypass the waiting room to ensure all assets are loaded properly on the paths being bypassed. Note that in this example, all requests ending in `js`, `css` or `png` will bypass the waiting room regardless of the subpath. If this is not your intended use case, please alter the expression to suit your specific requirements and site architecture.
 
-
-```json
-curl -X POST \
-"https://api.cloudflare.com/client/v4/zones/<ZONE_ID>/waiting_rooms/<ROOM_ID>/rules" \
--H "Authorization: Bearer <API_TOKEN>" \
--d '{
-        "description": "subpath bypass",
-        "expression": "starts_with(http.request.uri.path, \"/bypassme\") or ends_with(http.request.uri.path, \".js\") or ends_with(http.request.uri.path, \".css\") or ends_with(http.request.uri.path, \".png\")",
-        "action": "bypass_waiting_room"
+```bash
+curl "https://api.cloudflare.com/client/v4/zones/{zone_id}/waiting_rooms/{room_id}/rules" \
+--header "Authorization: Bearer <API_TOKEN>" \
+--data '{
+  "description": "subpath bypass",
+  "expression": "starts_with(http.request.uri.path, \"/bypassme\") or ends_with(http.request.uri.path, \".js\") or ends_with(http.request.uri.path, \".css\") or ends_with(http.request.uri.path, \".png\")",
+  "action": "bypass_waiting_room"
 }'
 ```
 
-</div>
-</details>
+{{</details>}}
 
-<details>
-<summary>Allow a defined list of IPs to bypass the waiting room</summary>
-<div>
+{{<details header="Allow a defined list of IPs to bypass the waiting room">}}
 
-```json
-curl -X POST \
-"https://api.cloudflare.com/client/v4/zones/<ZONE_ID>/waiting_rooms/<ROOM_ID>/rules" \
--H "Authorization: Bearer <API_TOKEN>" \
--d '{
-        "description": "ip list bypass",
-        "expression": "ip.src in $bypass_ip_list",
-        "action": "bypass_waiting_room"
-}'  
+```bash
+curl "https://api.cloudflare.com/client/v4/zones/{zone_id}/waiting_rooms/{room_id}/rules" \
+--header "Authorization: Bearer <API_TOKEN>" \
+--data '{
+  "description": "ip list bypass",
+  "expression": "ip.src in $bypass_ip_list",
+  "action": "bypass_waiting_room"
+}'
 ```
 
-</div>
-</details>
+{{</details>}}
 
 ### Other API options for managing bypass rules
 

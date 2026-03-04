@@ -2,16 +2,18 @@
 pcx_content_type: how-to
 title: SentinelOne
 weight: 4
-layout: single
 meta:
    title: SentinelOne - Posture checks
 ---
 
 # SentinelOne
 
-{{<render file="posture/_available-for-warp-with-gateway.md">}}
+Cloudflare Zero Trust can integrate with SentinelOne to require that users connect to certain applications from managed devices. Our service-to-service posture check identifies devices based on their serial numbers.
 
-Device posture with SentinelOne requires the SentinelOne agent and the Cloudflare WARP client to be deployed on your devices. Our service-to-service posture check identifies devices based on their serial numbers.
+## Prerequisites
+
+- SentinelOne agent is deployed on the device.
+- {{<render file="posture/_prereqs-warp-is-deployed.md" withParameters="[Service providers](/cloudflare-one/identity/devices/service-providers/)">}}
 
 ## Set up SentinelOne as a service provider
 
@@ -55,9 +57,13 @@ To retrieve those values:
 
 Device posture data is gathered from the SentinelOne Management APIs. For more information, refer to `https://<S1-DOMAIN>.sentinelone.net/api-doc/overview`.
 
-| Selector      | Description         |
-| ------------- | ------------------- |
-| Infected          | Whether the device is infected     |
-| Active Threats      | Number of active threats on the device   |
-| Is Active | Whether the SentinelOne Agent is active |
-| Network status      | Whether the SentinelOne Agent is connected to the SentinelOne service   |
+| Selector       | Description                                                           |
+| -------------- | --------------------------------------------------------------------- |
+| Infected       | Whether the device is infected                                        |
+| Active Threats | Number of active threats on the device                                |
+| Is Active      | Whether the SentinelOne Agent is active                               |
+| Network status | Whether the SentinelOne Agent is connected to the SentinelOne service |
+
+### Detect user risk behavior
+
+SentinelOne provides endpoint detection and response (EDR) signals to determine [user risk score](/cloudflare-one/insights/risk-score/). User risk scores allow you to detect users that present security risks to your organization. For more information, refer to [Predefined risk behaviors](/cloudflare-one/insights/risk-score/#predefined-risk-behaviors).

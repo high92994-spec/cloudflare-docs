@@ -1,9 +1,13 @@
 ---
 title: Tutorials
 pcx_content_type: navigation
-weight: 2
+weight: 4
+layout: wide
+hideChildren: true
 ---
 
 # Tutorials
 
-{{<directory-listing>}}
+View {{<glossary-tooltip term_id="tutorial">}}tutorials{{</glossary-tooltip>}} to help you get started with KV.
+
+{{<tutorial-listing>}}

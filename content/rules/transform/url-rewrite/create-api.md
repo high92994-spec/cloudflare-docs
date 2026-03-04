@@ -8,7 +8,7 @@ meta:
 
 # Create a rewrite URL rule via API
 
-Use the [Rulesets API](/ruleset-engine/rulesets-api/) to create rewrite URL rules via API. Refer to [URL rewrite examples](/rules/transform/url-rewrite/examples/) for common use cases.
+Use the [Rulesets API](/ruleset-engine/rulesets-api/) to create rewrite URL rules via API. Refer to the [Rules examples gallery](/rules/transform/examples/?operation=Rewrite+URL) for common use cases.
 
 ## Basic rule settings
 
@@ -26,9 +26,7 @@ Make sure your API token has the [required permissions](#required-api-token-perm
 
 ## Example requests
 
-<details>
-<summary>Example: Add a rule that performs a static URL rewrite</summary>
-<div>
+{{<details header="Example: Add a rule that performs a static URL rewrite">}}
 
 The following example sets the rules of an existing phase ruleset (`{ruleset_id}`) to a single rewrite URL rule — performing a static rewrite of the URI path — using the [Update a zone ruleset](/api/operations/updateZoneRuleset) operation:
 
@@ -98,12 +96,9 @@ header: Response
 }
 ```
 
-</div>
-</details>
+{{</details>}}
 
-<details>
-<summary>Example: Add a rule that performs a dynamic URL rewrite</summary>
-<div>
+{{<details header="Example: Add a rule that performs a dynamic URL rewrite">}}
 
 The following example sets the rules of an existing phase ruleset (`{ruleset_id}`) to a single rewrite URL rule — performing a dynamic rewrite of the URI path — using the [Update a zone ruleset](/api/operations/updateZoneRuleset) operation:
 
@@ -173,8 +168,7 @@ header: Response
 }
 ```
 
-</div>
-</details>
+{{</details>}}
 
 ---
 

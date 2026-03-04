@@ -8,22 +8,22 @@ meta:
 
 # Get started with Cache
 
-Cloudflare makes customer websites faster by storing a copy of the website’s content on the servers of our globally distributed data centers. Content can be either static or dynamic: static content is “cacheable” or eligible for caching, and dynamic content is “uncacheable” or ineligible for caching. The cached copies of content are stored physically closer to users, optimized to be fast, and do not require recomputing.
+Cloudflare makes customer websites faster by storing a copy of the website's content on the servers of our globally distributed data centers. Content can be either static or dynamic: static content is “cacheable” or eligible for caching, and dynamic content is “uncacheable” or ineligible for caching. The cached copies of content are stored physically closer to users, optimized to be fast, and do not require recomputing.
 
 Cloudflare caches static content based on the following factors:
 
-* Cache level set at a zone or [page rule](/cache/how-to/edge-browser-cache-ttl/create-page-rules/)
+* [Caching levels](/cache/how-to/set-caching-levels/)
 * [File extension](/cache/concepts/default-cache-behavior/#default-cached-file-extensions)
 * Presence of [query strings](/cache/advanced-configuration/query-string-sort/)
 * [Origin cache-control headers](/cache/concepts/cache-control/)
-* Origin headers that indicate [dynamic content](/logs/reference/glossary/#dynamic-content)
-* Page rules that [bypass cache on cookie](/support/third-party-software/content-management-system-cms/caching-html-with-drupal/#set-bypass-cache-on-cookie)
+* Origin headers that indicate {{<glossary-tooltip term_id="dynamic content">}}dynamic content{{</glossary-tooltip>}}
+* Cache rules that bypass cache on cookie
 
 Cloudflare only caches resources within the Cloudflare data center that serve the request. Cloudflare does not cache off-site or third-party resources, such as Facebook or Flickr, or content hosted on [unproxied (grey-clouded)](/dns/manage-dns-records/reference/proxied-dns-records/) DNS records.
 
 ## Learn the basics
 
-Discover the benefits of caching with Cloudflare’s CDN and understand the default cache behavior.
+Discover the benefits of caching with Cloudflare's CDN and understand the default cache behavior.
 
 - [Understand what is a CDN](https://www.cloudflare.com/learning/cdn/what-is-a-cdn/)
 - [Understand default cache behavior](/cache/concepts/default-cache-behavior/)
@@ -33,10 +33,10 @@ Discover the benefits of caching with Cloudflare’s CDN and understand the defa
 
 Configure your settings to cache static HTML or cache anonymous page views of dynamic content.
 
-- [Customize Caching with Cloudflare Rules](/cache/troubleshooting/customize-caching/)
+- [Customize Caching with Cache Rules](/cache/how-to/cache-rules/)
 - [Specify which resources to cache](/cache/concepts/customize-cache/)
 - [Understand Origin Cache Control](/cache/concepts/cache-control/)
-- [Cache by device type (Enterprise only)](/cache/how-to/edge-browser-cache-ttl/create-page-rules/#cache-by-device-type-enterprise-only)
+- [Cache by device type (Enterprise only)](/cache/how-to/cache-rules/examples/cache-device-type/)
 
 ## Improve cache hit rates
 
@@ -63,20 +63,18 @@ These code alterations only occur on the cacheable objects found at Cloudflare's
 
 Review the list of Cloudflare features that function in this manner:
 
-- [Auto Minify](/speed/optimization/content/auto-minify/)
+- [Auto Minify](/speed/optimization/content/auto-minify/) (deprecated)
 - [Rocket Loader](/speed/optimization/content/rocket-loader/)
 - [Polish](/images/polish/)
 - [Mirage](/speed/optimization/images/mirage/)
-- [Hotlink Protection](/support/more-dashboard-apps/cloudflare-scrape-shield/understanding-cloudflare-hotlink-protection/)
-- [Email address obfuscation](/support/more-dashboard-apps/cloudflare-scrape-shield/what-is-email-address-obfuscation/)
+- [Hotlink Protection](/waf/tools/scrape-shield/hotlink-protection/)
+- [Email address obfuscation](/waf/tools/scrape-shield/email-address-obfuscation/)
 - [Bot Management JavaScript Detections](/bots/reference/javascript-detections/)
-
-organise
 
 ## Troubleshoot
 
 Resolve common caching concerns.
 
-- [Learn about Cloudflare's cache response statuses](/cache/concepts/default-cache-behavior/#cloudflare-cache-responses)
+- [Learn about Cloudflare's cache response statuses](/cache/concepts/cache-responses/)
 - [Investigate Cloudflare's cache response with cURL](/support/troubleshooting/general-troubleshooting/gathering-information-for-troubleshooting-sites/#troubleshoot-requests-with-curl)
 - [Diagnose Always Online issues](/cache/troubleshooting/always-online/)

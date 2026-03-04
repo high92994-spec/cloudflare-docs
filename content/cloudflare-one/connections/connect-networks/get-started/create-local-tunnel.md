@@ -2,7 +2,6 @@
 title: Create a locally-managed tunnel (CLI)
 pcx_content_type: how-to
 weight: 2
-layout: single
 ---
 
 # Set up a tunnel locally
@@ -13,7 +12,7 @@ Follow this step-by-step guide to get your first tunnel up and running using the
 
 Before you start, make sure you:
 
-- [Add a website to Cloudflare](/fundamentals/setup/account-setup/add-site/).
+- [Add a website to Cloudflare](/fundamentals/setup/manage-domains/add-site/).
 - [Change your domain nameservers to Cloudflare](/dns/zone-setups/full-setup/setup/).
 
 ## 1. Download and install `cloudflared`
@@ -27,42 +26,44 @@ Before you start, make sure you:
 
 3. In PowerShell, change directory to your Downloads folder and run `.\cloudflared.exe --version`. It should output the version of `cloudflared`. Note that `cloudflared.exe` could be `cloudflared-windows-amd64.exe` or `cloudflared-windows-386.exe` if you have not renamed it.
 
-```bash
+```powershell
 PS C:\Users\Administrator\Downloads\cloudflared-stable-windows-amd64> .\cloudflared.exe --version
 ```
 
 {{</tab>}}
 {{<tab label="macos" no-code="true">}}
- 
+
 To download and install `cloudflared`:
 
 ```sh
-$ brew install cloudflare/cloudflare/cloudflared
+$ brew install cloudflared
 ```
 
 Alternatively, you can [download the latest Darwin amd64 release](/cloudflare-one/connections/connect-networks/downloads/) directly.
- 
+
 {{</tab>}}
 {{<tab label="linux" no-code="true">}}
 
-1. Download `cloudflared` on your machine. Visit the [downloads](/cloudflare-one/connections/connect-networks/downloads/) page to find the right package for your OS.
+**Debian and Ubuntu APT**
 
-2. Install `cloudflared`:
+Use the apt package manager to install `cloudflared` on compatible machines.
 
-**.deb install**
+{{<render file="tunnel/_cloudflared-debian-install.md">}}
 
-Use the deb package manager to install `cloudflared` on compatible machines. `amd64 / x86-64` is used in this example.
+**RHEL RPM**
+
+Use the rpm package manager to install `cloudflared` on compatible machines.
+
+1. Add Cloudflare's repository:
 
 ```sh
-$ wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && sudo dpkg -i cloudflared-linux-amd64.deb
+$ curl -fsSL https://pkg.cloudflare.com/cloudflared-ascii.repo | sudo tee /etc/yum.repos.d/cloudflared.repo
 ```
 
-**​.rpm install**
-
-Use the rpm package manager to install `cloudflared` on compatible machines. `amd64 / x86-64` is used in this example.
+2. Update repositories and install cloudflared:
 
 ```sh
-$ wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-x86_64.rpm
+$ sudo yum update && sudo yum install cloudflared
 ```
 
 **Arch Linux**
@@ -73,6 +74,10 @@ Use `pacman` to install `cloudflared` on compatible machines.
 ```sh
 $ pacman -Syu cloudflared
 ```
+
+**Other**
+
+Alternatively you can download the `cloudflared` binary or the linux packages to your machine and install manually. Visit the [downloads](/cloudflare-one/connections/connect-networks/downloads/) page to find the right package for your OS.
 
 {{</tab>}}
 {{<tab label="build from source" no-code="true">}}
@@ -194,7 +199,7 @@ $ cloudflared tunnel run <UUID or NAME>
 If your configuration file has a custom name or is not in the `.cloudflared` directory, add the `--config` flag and specify the path.
 
 ```sh
-$ cloudflared tunnel --config /path/your-config-file.yaml run <UUID or NAME>
+$ cloudflared tunnel --config /path/your-config-file.yml run <UUID or NAME>
 ```
 
 {{<Aside>}}

@@ -1,7 +1,6 @@
 ---
 title: API
 pcx_content_type: concept
-layout: single
 weight: 2
 meta:
    title: API deployment
@@ -10,7 +9,13 @@ meta:
 
 # API deployment
 
-{{<render file="_setup-api-overview.md">}}
+{{<Aside type="warning" header="Area 1 has been renamed">}}
+
+{{<render file="rename-area1-to-ces.md">}}
+
+{{</Aside>}}
+
+{{<render file="deployment/_setup-api-overview.md">}}
 
 ## Get started
 

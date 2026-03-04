@@ -21,12 +21,7 @@ Vary for images is available for Pro, Business, and Enterprise customers.
 
 You can use vary for images on the file extensions below if the origin server sends the `Vary: Accept` response header. If the origin server sends `Vary: Accept` but does not serve the set variant, the response is not cached and displays `BYPASS` in the cache status in the response header. Additionally, the list of variant types the origin serves for each extension must be configured so that Cloudflare decides which variant to serve without contacting the origin server.
 
-<details>
-<summary>
-  File extensions enabled for varying
-</summary>
-
-<div>
+{{<details header="File extensions enabled for varying">}}
   <ul>
     <li>.avif</li>
     <li>.bmp</li>
@@ -39,8 +34,7 @@ You can use vary for images on the file extensions below if the origin server se
     <li>.tiff</li>
     <li>.webp</li>
   </ul>
-</div>
-</details>
+{{</details>}}
 
 ## Enable vary for images
 
@@ -48,44 +42,41 @@ Vary for Images is enabled through Cloudflare’s API by creating a variants rul
 
 ### Create a variants rule
 
-```json
-curl -X PATCH 
-"https://api.cloudflare.com/client/v4/zones/023e105f4ecef8ad9ca31a8372d0 c353/cache/variants" \ 
--H "X-Auth-Email: user@example.com" \ 
--H "X-Auth-Key: 3xamp1ek3y1234" \ 
--H "Content-Type: application/json" \ 
---data 
-'{"value":{"jpeg":["image/webp","image/avif"],"jpg":["image/webp","image/avif"]}}' 
+```bash
+curl --request PATCH \
+"https://api.cloudflare.com/client/v4/zones/{zone_id}/cache/variants" \
+--header "X-Auth-Email: <EMAIL>" \
+--header "X-Auth-Key: <API_KEY>" \
+--header "Content-Type: application/json" \
+--data '{"value":{"jpeg":["image/webp","image/avif"],"jpg":["image/webp","image/avif"]}}'
 ```
 
 ### Modify to only allow WebP variants
 
-```json
-curl -X PATCH 
-"https://api.cloudflare.com/client/v4/zones/023e105f4ecef8ad9ca31a8372d0 c353/cache/variants" \ 
--H "X-Auth-Email: user@example.com" \ 
--H "X-Auth-Key: 3xamp1ek3y1234" \ 
--H "Content-Type: application/json" \ 
---data 
-'{"value":{"jpeg":["image/webp"],"jpg":["image/webp"]}}' 
+```bash
+curl --request PATCH \
+"https://api.cloudflare.com/client/v4/zones/{zone_id}/cache/variants" \
+--header "X-Auth-Email: <EMAIL>" \
+--header "X-Auth-Key: <API_KEY>" \
+--header "Content-Type: application/json" \
+--data '{"value":{"jpeg":["image/webp"],"jpg":["image/webp"]}}'
 ```
 
 ### Delete the rule
 
-```json
-curl -X DELETE 
-"https://api.cloudflare.com/client/v4/zones/023e105f4ecef8ad9ca31a8372d0c353/cache/variants" \ 
--H "X-Auth-Email: user@example.com" \ 
--H "X-Auth-Key: 3xamp1ek3y1234" 
+```bash
+curl --request DELETE \
+"https://api.cloudflare.com/client/v4/zones/{zone_id}/cache/variants" \
+--header "X-Auth-Email: <EMAIL>" \
+--header "X-Auth-Key: <API_KEY>"
 ```
 
 ### Get the rule
 
-```json
-curl -X GET 
-"https://api.cloudflare.com/client/v4/zones/023e105f4ecef8ad9ca31a8372d0c353/cache/variants" \
--H "X-Auth-Email: user@example.com" \ 
--H "X-Auth-Key: 3xamp1ek3y1234" 
+```bash
+curl "https://api.cloudflare.com/client/v4/zones/{zone_id}/cache/variants" \
+--header "X-Auth-Email: <EMAIL>" \
+--header "X-Auth-Key: <API_KEY>"
 ```
 
 To learn more about purging varied images, refer to [Purge varied images](/cache/how-to/purge-cache/purge-varied-images/).

@@ -3,11 +3,13 @@ updated: 2021-11-30
 difficulty: Beginner
 content_type: 📝 Tutorial
 pcx_content_type: tutorial
-layout: single
 title: Add a React form with Formspree
+tags: [Forms]
 ---
 
 # Add a React form with Formspree
+
+{{<tutorial-date-info>}}
 
 Almost every React website needs a form to collect user data. [Formspree](https://formspree.io/) is a back-end service that handles form processing and storage, allowing developers to include forms on their website without writing server-side code or functions.
 

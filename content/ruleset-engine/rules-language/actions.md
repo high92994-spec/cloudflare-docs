@@ -3,7 +3,7 @@ title: Actions
 pcx_content_type: reference
 type: overview
 weight: 5
-layout: list
+layout: wide
 meta:
   title: Actions reference
 ---
@@ -16,7 +16,7 @@ The action of a rule tells Cloudflare how to handle matches for the rule [expres
 
 The table below lists the actions available in the Rules language.
 
-Some actions, like _Block_, will stop the evaluation of the remaining rules. The _Skip_ action will skip the evaluation of _some_ rules when there is a match, but the exact behavior will depend on the rule configuration.
+Some actions like _Block_, called terminating actions, will stop the evaluation of the remaining rules. The _Skip_ action will skip the evaluation of _some_ rules when there is a match, but the exact behavior will depend on the rule configuration.
 
 The available actions depend on the [phase](/ruleset-engine/about/phases/) where you are configuring the rule. Refer to each product’s documentation for details on the phase(s) supported by that product.
 
@@ -27,7 +27,7 @@ The available actions depend on the [phase](/ruleset-engine/about/phases/) where
     <tr>
       <th>Action</th>
       <th>Description</th>
-      <th>Stops rule evaluation?</th>
+      <th>Terminating action?</th>
     </tr>
   </thead>
   <tbody>
@@ -175,7 +175,7 @@ The available actions depend on the [phase](/ruleset-engine/about/phases/) where
         <p>Only available in:</p>
         <ul>
           <li><a href="/rules/transform/">Transform Rules</a>, in phases <code>http_request_transform</code>, <code>http_request_late_transform</code>, and <code>http_response_headers_transform</code>. In the Cloudflare dashboard, this action is not listed in action selection dropdowns. To use this action, create a Transform Rule.</li>
-          <li>WAF custom rules checking for <a href="/waf/exposed-credentials-check/">exposed credentials</a>, in the <code>http_request_firewall_custom</code> phase at the account level. In the Cloudflare dashboard, this action is called <em>Exposed-Credential-Check Header</em>.</li>
+          <li>WAF custom rules checking for <a href="/waf/managed-rules/check-for-exposed-credentials/">exposed credentials</a>, in the <code>http_request_firewall_custom</code> phase at the account level. In the Cloudflare dashboard, this action is called <em>Exposed-Credential-Check Header</em>.</li>
         </ul>
       </td>
       <td>No</td>
@@ -256,6 +256,26 @@ The available actions depend on the [phase](/ruleset-engine/about/phases/) where
         </p>
         <p>
           In the Cloudflare dashboard, this action is not listed in action selection dropdowns. To use this action, <a href="/rules/compression-rules/create-dashboard/">create a compression rule</a>.
+        </p>
+      </td>
+      <td>No</td>
+    </tr>
+        <tr>
+      <td>
+        <strong>Set Cache Settings</strong><br />
+        <br />
+        API value:<br />
+        <code>set_cache_settings</code>
+      </td>
+      <td>
+        <p>
+          Cache Rules allows you to customize cache settings on Cloudflare.
+        </p>
+        <p>
+          Only available for <a href="/rules/compression-rules/">Cache Rules</a>, in the <code>http_request_cache_settings</code> phase.
+        </p>
+        <p>
+          In the Cloudflare dashboard, this action is not listed in action selection dropdowns. To use this action, <a href="/cache/how-to/cache-rules/create-dashboard/">create a cache rule</a>.
         </p>
       </td>
       <td>No</td>

@@ -21,24 +21,37 @@ Cloudflare allows you to select your cache topology so that you have control ove
 
 Smart Tiered Cache dynamically selects the single closest upper tier for each of your website’s origins with no configuration required, using our in-house performance and routing data. Cloudflare collects latency data for each request to an origin, and uses the latency data to determine how well any upper-tier data center is connected with an origin. As a result, Cloudflare can select the data center with the lowest latency to be the upper-tier for an origin.
 
+#### Smart Tiered Cache and anycast network
+
+Smart Tiered Cache does not work when an origin is behind an [anycast network](https://www.cloudflare.com/en-gb/learning/cdn/glossary/anycast-network/) because that will prevent us from knowing where the origin is located. As a result, we are unable to select the optimal upper tier and latency may be negatively impacted.
+
+You need to be careful when updating your origin IPs/DNS records while Smart Tiered Cache is enabled. Depending on the changes made, it may cause the existing assigned upper tiers to change, resulting in an increased `MISS` rate as cache is refilled in the new upper tiers. If the origin is switched to a network behind anycast, it will significantly reduce the effectiveness of Smart Tiered Cache.
+
+If you need to use anycast and want to use Smart Tiered cache, contact your account team.
+
 ### Generic Global Tiered Cache
 
 Generic Global topology allows for all of Cloudflare’s global data centers to serve as a network of upper-tiers. This topology may help reduce the long tail latencies for far-away visitors.
 
 ### Regional Tiered Cache
 
-Regional Tiered Cache provides an additional layer of caching for Enterprise customers who have a global traffic footprint and want to serve content faster by avoiding network latency when there is a cache MISS in a lower-tier, resulting in an upper-tier fetch in a data center located far away.
+Regional Tiered Cache provides an additional layer of caching for Enterprise customers who have a global traffic footprint and want to serve content faster by avoiding network latency when there is a cache `MISS` in a lower-tier, resulting in an upper-tier fetch in a data center located far away.
 
 Regional Cache instructs Cloudflare to check a regional hub data center near the lower tier before going to the upper tier that may be outside of the region. This can help improve performance for **Smart** and **Custom Tiered Cache** topologies with upper-tiers in one or two regions. Regional Tiered Cache is not beneficial for customers with many upper tiers in many regions like Generic Global Tiered Cache.
 
 ### Custom Tiered Cache
 
-Custom Tiered cache allows you to work with Cloudflare’s support team to set a custom topology that fits your specific needs, for instance you have close upper tiers or you have an unique traffic pattern. If you want a custom topology, please contact your CSM. 
-
+Custom Tiered cache allows you to work with Cloudflare’s support team to set a custom topology that fits your specific needs, for instance you have close upper tiers or you have an unique traffic pattern. If you want a custom topology, please contact your CSM.
 
 ## Availability
 
 {{<feature-table id="cache.tiered_cache">}}
+
+{{<Aside type="note">}}
+
+Tiered Cache currently is not compatible with responses from [R2](/r2). These responses will act as if Tiered Cache is not configured.
+
+{{</Aside>}}
 
 ## Bandwidth Alliance
 
@@ -55,7 +68,7 @@ You can enable Tiered Cache in the dashboard or via API.
 3. From **Tiered Cache**, toggle the button to **enabled**.
 4. In **Tiered Cache Topology**, you can control how your origin connects to Cloudflare’s data centers. You can select:
     - **Upper Tier Cache** - You have the option to choose between Smart or Generic Global Tiered Cache Topology.
-    - **Middle Tier Cache** -  If you have selected Smart or Custom Tiered Cache Topology, you can now enable Regional Tiered Cache. 
+    - **Middle Tier Cache** -  If you have selected Smart or Custom Tiered Cache Topology, you can now enable Regional Tiered Cache.
     - **Custom Tiered Cache** - Allows you to work with Cloudflare’s support team to set a custom topology that fits your specific needs.
     - **Disable Tiered Cache**.
 
@@ -74,9 +87,7 @@ curl --request GET \
 
 You can also configure Tiered Cache Topology via API, for instance:
 
-<details>
-<summary>Enable Smart Tiered Cache</summary>
-<div>
+{{<details header="Enable Smart Tiered Cache">}}
 
 ```json
 curl --request GET \
@@ -85,12 +96,9 @@ curl --request GET \
  --header 'X-Auth-Email: '
  ```
 
- </div>
-</details>
+ {{</details>}}
 
-<details>
-<summary>Enable Regional Tiered Cache</summary>
-<div>
+{{<details header="Enable Regional Tiered Cache">}}
 
 ```json
 curl --request GET \
@@ -99,8 +107,7 @@ curl --request GET \
  --header 'X-Auth-Email: '
 ```
 
-</div>
-</details>
+{{</details>}}
 
 For more API examples and configuration options for Tiered Cache, refer to the [API documentation](/api/operations/tiered-caching-get-tiered-caching-setting).
 

@@ -9,6 +9,10 @@ _build:
 
 In addition to enforcing mTLS authentication for your host, you can also forward a client certificate to your origin server as an HTTP header. This setup is often helpful for server logging.
 
+{{<Aside type="warning">}}
+This process is only available on accounts with [Cloudflare Access](/cloudflare-one/).
+{{</Aside>}}
+
 ### Cloudflare API
 
 The most common approach to forwarding a certificate is to use the Cloudflare API to [update an mTLS certificate's hostname settings](/api/operations/zone-level-access-mtls-authentication-update-an-mtls-certificate-settings).
@@ -19,18 +23,18 @@ header: Request
 highlight: [11]
 ---
 curl --request PUT \
-  --url https://api.cloudflare.com/client/v4/zones/<ZONE_ID>/access/certificates/settings \
-  --header 'content-type: application/json' \
-  --header 'x-auth-email: <EMAIL>' \
-  --header 'x-auth-key: <API_KEY>' \
-  --data '{
-    "settings": [
-        {
-            "hostname": "<HOSTNAME>",
-            "china_network": false,
-            "client_certificate_forwarding": true
-        }
-    ]
+https://api.cloudflare.com/client/v4/zones/{zone_id}/access/certificates/settings \
+--header "x-auth-email: <EMAIL>" \
+--header "x-auth-key: <API_KEY>" \
+--header "content-type: application/json" \
+--data '{
+  "settings": [
+    {
+      "hostname": "<HOSTNAME>",
+      "china_network": false,
+      "client_certificate_forwarding": true
+    }
+  ]
 }'
 ```
 
@@ -45,7 +49,7 @@ You can also [modify HTTP response headers](/rules/transform/response-header-mod
 
 ### Cloudflare Workers
 
-Additionally, Workers can provide details around the [client certificate](/workers/runtime-apis/mtls/).
+Additionally, Workers can provide details around the [client certificate](/workers/runtime-apis/bindings/mtls/).
 
 ```js
 const tlsHeaders = {

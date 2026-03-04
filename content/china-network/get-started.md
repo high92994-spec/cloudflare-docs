@@ -27,11 +27,11 @@ Contact your sales team for more information on these steps.
     * Customer and company name.
     * Domain name.
     * ICP license/filing number.
-    * A general description of the content of each domain.
+    * A general description of the content of each domain (for example, `Marketing website`).
     * A signed Self Attestation letter (provided by your sales team).
 
 ## Step 3 — Onboard your domains to the Cloudflare China Network
 
-After content vetting is complete, [add your domains to Cloudflare](/fundamentals/setup/account-setup/add-site/).
+After content vetting is complete, [add your domains to Cloudflare](/fundamentals/setup/manage-domains/add-site/).
 
 It will take a minimum of 24 hours to enable user traffic (that is, until DNS starts answering with JD Cloud's network IP addresses).

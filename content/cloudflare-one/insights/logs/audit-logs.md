@@ -43,14 +43,13 @@ To view logs for identity-based authentication events:
 
 The [Access authentication logs](/api/operations/access-authentication-logs-get-access-authentication-logs) API endpoint provides a custom URL to export audit log events for your account.
 
-```curl
+```bash
 ---
 header: Request
 ---
-curl -X GET "https://api.cloudflare.com/client/v4/accounts/699d98642c564d2e855e9661899b7252/access/logs/access_requests?limit=25&direction=desc&since=2020-07-01T05:20:00Z&until=2020-10-01T05:20:00Z" \
-     -H "X-Auth-Email: user@example.com" \
-     -H "X-Auth-Key: c2547eb745079dac9320b638f5e225cf483cc5cfdda41" \
-     -H "Content-Type: application/json"
+curl "https://api.cloudflare.com/client/v4/accounts/{account_id}/access/logs/access_requests?limit=25&direction=desc&since=2020-07-01T05:20:00Z&until=2020-10-01T05:20:00Z" \
+--header "X-Auth-Email: <EMAIL>" \
+--header "X-Auth-Key: <API_KEY>"
 ```
 
 ```json
@@ -114,7 +113,7 @@ Users who have authenticated through Access have access to authorized URL paths 
 
 Enterprise customers have access to detailed logs of HTTP requests on their Cloudflare dashboard. Enterprise customers also have access to Cloudflare's Logpush service, which can be configured from the Cloudflare dashboard or API. For more information about Cloudflare HTTP logging, refer to [Cloudflare Logs](/logs/).
 
-Once a member of your team authenticates to reach a resource behind Access, Cloudflare generates a token for that user that contains their SSO identity. The token is structured as a [JSON Web Token (JWT)](/cloudflare-one/glossary/#json-web-token). Cloudflare relies on an RSA Signature with SHA-256, or RS256, an asymmetric algorithm, to perform that signature. Cloudflare also makes the public key available, so that you can validate their authenticity, as well.
+Once a member of your team authenticates to reach a resource behind Access, Cloudflare generates a token for that user that contains their SSO identity. The token is structured as a {{<glossary-tooltip term_id="JSON web token">}}JSON Web Token (JWT){{</glossary-tooltip>}}. Cloudflare relies on an RSA Signature with SHA-256, or RS256, an asymmetric algorithm, to perform that signature. Cloudflare also makes the public key available, so that you can validate their authenticity, as well.
 
 When a user requests a given URL, Access appends the user identity from that token as a request header, which we then log as the request passes through our network. Your team can collect these logs in your preferred third-party Security information and event management (SIEM) software or storage destination by using [Cloudflare Logpush](/cloudflare-one/insights/logs/logpush/). When enabled with the Access user identity field, the logs will export to your systems as JSON similar to the logs below.
 

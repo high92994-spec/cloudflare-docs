@@ -2,12 +2,11 @@
 pcx_content_type: concept
 title: Configuration Rules
 weight: 7
-layout: single
 meta:
-  title: Configuration Rules (beta)
+  title: Configuration Rules
 ---
 
-{{<heading-pill style="beta">}} Configuration Rules {{</heading-pill>}}
+# Configuration Rules
 
 Configuration Rules allow you to customize certain Cloudflare [configuration settings](/rules/configuration-rules/settings/) for matching incoming requests.
 
@@ -25,4 +24,6 @@ The number of available configuration rules varies according to your Cloudflare 
 
 ## Execution order
 
-{{<render file="_product_execution_order.md">}}
+{{<render file="_product-execution-order.md">}}
+
+{{<render file="_troubleshoot-rules-with-trace.md" withParameters="configuration rules">}}

@@ -1,17 +1,22 @@
 ---
 pcx_content_type: reference
 title: Domain categories
-weight: 8
+weight: 9
 ---
 
 # Domain categories
 
 Cloudflare Gateway allows you to block known and potential security risks on the public Internet, as well as specific categories of content. Domains are categorized by [Cloudflare Radar](/radar/glossary/#content-categories).
 
+{{<render file="gateway/_domain-categories.md">}}
+
 You can block security and content categories by creating DNS or HTTP policies. Once you have configured your policies, you will be able to inspect network activity and the associated categories in your Gateway logs.
 
-{{<Aside type="note" header="Subdomain Category">}}
-Subdomains that have not been assigned a category will inherit the category of their parent domain.{{</Aside>}}
+To request changes to a domain's categorization, refer to [Change categorization](/security-center/investigate/change-categorization/). For more information on investigating potentially risky domains, refer to [Investigate threats](/security-center/investigate/investigate-threats/#domain).
+
+{{<Aside type="note" header="Subdomain category">}}
+Subdomains that have not been assigned a category will inherit the category of their parent domain. When Gateway categorizes a subdomain, the subdomain will carry only its own category. Categorized subdomains will not inherit their parent domain's categories.
+{{</Aside>}}
 
 ## Security categories
 
@@ -35,14 +40,12 @@ Subdomains that have not been assigned a category will inherit the category of t
 
 ## Content categories
 
-{{<table-wrap>}}
-
 | Category               | Definition                                                                                                                                                                        |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Adult Themes           | Sites that are hosting content related to pornography, nudity, sexuality, and other adult themes.                                                                                 |
-| Business & Economy     | Sites that are related to business, economy, finance, education, science and technology.                                                                                          |
+| Adult Themes           | Sites that are hosting content related to pornography, nudity, sexuality, and other adult themes. |
+| Business & Economy     | Sites that are related to business, economy, finance, education, science and technology. |
 | Child Abuse            | Sites hosting child abuse content.                                                                                                                                                |
-| CIPA                   | Sites related to aiding schools and organizations in abiding by CIPA requirements. |
+| CIPA                   | Sites related to aiding schools and organizations in abiding by CIPA requirements.                                                                                                |
 | Education              | Sites hosting educational content that are not included in other categories like Science, Technology or Educational institutions.                                                 |
 | Entertainment          | Sites that are hosting entertaining content that are not included in other categories like Comic books, Audio streaming, Video streaming etc.                                     |
 | Gambling               | Sites that are providing online gambling or are related to gambling.                                                                                                              |
@@ -66,19 +69,17 @@ Subdomains that have not been assigned a category will inherit the category of t
 | Violence               | Sites hosting and/or promoting violent content.                                                                                                                                   |
 | Weather                | Sites related to weather.                                                                                                                                                         |
 
-{{</table-wrap>}}
-
 ### Miscellaneous subcategories
 
 {{<table-wrap>}}
 
-| Category      | Definition                                                             |
-| ------------- | ---------------------------------------------------------------------- |
-| Login Screens | Sites hosting login screens that are not included in other categories. |
-| Miscellaneous | Sites that do not belong to other content categories.                  |
-| No Content    | Sites that have no content.                                            |
-| Redirect      | Domains that redirect to other sites.                                  |
-| Unreachable   | Domains that resolve to unreachable IP addresses.                      |
+| Category      | Definition                                                                   |
+| ------------- | ---------------------------------------------------------------------------- |
+| Login Screens | Sites hosting login screens that might also be included in other categories. |
+| Miscellaneous | Sites that do not belong to other content categories.                        |
+| No Content    | Sites that have no content.                                                  |
+| Redirect      | Domains that redirect to other sites.                                        |
+| Unreachable   | Domains that resolve to unreachable IP addresses.                            |
 
 {{</table-wrap>}}
 
@@ -105,7 +106,7 @@ Subdomains that have not been assigned a category will inherit the category of t
 | 2           | Adult Themes           | 133            | Pornography                                |
 | 3           | Business & Economy     | 75             | Business                                   |
 | 3           | Business & Economy     | 89             | Economy & Finance                          |
-| 3           | Business & Economy     | 183            | Cryptocurrency                             | 
+| 3           | Business & Economy     | 183            | Cryptocurrency                             |
 | 6           | Education              | 90             | Education                                  |
 | 6           | Education              | 91             | Educational Institutions                   |
 | 6           | Education              | 144            | Science                                    |
@@ -168,7 +169,7 @@ Subdomains that have not been assigned a category will inherit the category of t
 | 21          | Security threats       | 153            | Spyware                                    |
 | 21          | Security threats       | 175            | DNS Tunneling                              |
 | 21          | Security threats       | 176            | Domain Generation Algorithm                |
-| 21          | Security threats       | 178            | Typosquatting & Impersonation              |
+| 21          | Security threats       | 178            | Brand Embedding                            |
 | 22          | Shopping & Auctions    | 73             | Auctions & Marketplaces                    |
 | 22          | Shopping & Auctions    | 82             | Coupons                                    |
 | 22          | Shopping & Auctions    | 88             | Ecommerce                                  |
@@ -193,28 +194,52 @@ Subdomains that have not been assigned a category will inherit the category of t
 | 24          | Society & Lifestyle    | 158            | Tobacco                                    |
 | 24          | Society & Lifestyle    | 173            | Body Art                                   |
 | 24          | Society & Lifestyle    | 174            | Lingerie & Bikini                          |
+| 24          | Society & Lifestyle    | 181            | Alcohol                                    |
 | 25          | Sports                 | 152            | Sports                                     |
-| 26          | Technology             | 155            | Technology                                 |
-| 26          | Technology             | 95             | File Sharing                               |
 | 26          | Technology             | 69             | APIs                                       |
 | 26          | Technology             | 81             | Content Servers                            |
+| 26          | Technology             | 95             | File Sharing                               |
 | 26          | Technology             | 109            | Information Technology                     |
 | 26          | Technology             | 123            | News, Portal & Search                      |
 | 26          | Technology             | 145            | Search Engines                             |
+| 26          | Technology             | 155            | Technology                                 |
 | 26          | Technology             | 159            | Translator                                 |
+| 26          | Technology             | 184            | Artificial Intelligence                    |
 | 27          | Travel                 | 160            | Travel                                     |
 | 28          | Vehicles               | 163            | Vehicles                                   |
 | 29          | Violence               | 165            | Violence                                   |
 | 29          | Violence               | 166            | Weapons                                    |
 | 30          | Weather                | 167            | Weather                                    |
-| 31          | Blocked                | 170            | Child Abuse                                |
+| 31          | Blocked by default     | 170            | Child Abuse                                |
 | 32          | Security Risks         | 128            | Parked & For Sale Domains                  |
 | 32          | Security Risks         | 169            | New Domains                                |
 | 32          | Security Risks         | 177            | Newly Seen Domains                         |
-| 34          | CIPA         | 182            | CIPA Filter                         |
+| 34          | CIPA                   | 182            | CIPA Filter                                |
 
 {{</table-wrap>}}
 
-## Filter by resolved IP category
+## Filtering options
 
-When creating a DNS block policy for security or content categories, you can optionally enable **Filter traffic by resolved IP category** in the policy settings. When enabled, Gateway will block queries based on their resolved IP address in addition to the domain name. This setting may increase the number of false positives because domains in the blocked category can share IP addresses with legitimate domains.
+### Filter traffic by resolved IP category
+
+When creating a DNS policy for security or content categories, you can optionally turn on **Filter traffic by resolved IP category** in the policy settings. When turned on, Gateway will block queries based on their resolved IP address in addition to the domain name. This setting may increase the number of false positives because domains in the blocked category can share IP addresses with legitimate domains.
+
+### Ignore `CNAME` domain categories
+
+The categories for a site's `CNAME` records may differ from its `A` record. For example, `blog.example.com` may be categorized under Personal Blogs, while `example.com` is categorized under Technology. To limit matches for a DNS policy to only the root domain's categories, turn on **Ignore CNAME domain categories**.
+
+Regardless of this setting, `CNAME` domain categories will still appear in your Gateway [Logpush](/cloudflare-one/insights/logs/logpush/) logs.
+
+## Categorization process
+
+Cloudflare's domain categorization engine begins with multiple data sources, including:
+
+  1. Cloudflare's proprietary data using our global network.
+
+  2. Third-party intelligence feeds. Cloudflare uses data from over 30 open-source intelligence feeds and premium commercial feeds, such as Avira and Zvelo.
+
+Then, the initial categorization is refined via:
+
+  3. Machine learning models. Our algorithms, including DGA Domains, DNS tunneling, and phishing detection models analyze patterns and behaviors to detect new and evolving threats.
+
+  4. Community feedback. Through a review process, Cloudflare assesses feedback by both our internal models and threat analysts. This ensures that our categorizations reflect the most current and accurate threat intelligence.

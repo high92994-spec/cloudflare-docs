@@ -1,6 +1,9 @@
 ---
 pcx_content_type: concept
 title: Known issues
+weight: 6
+meta:
+  description: Known issues and bugs to be aware of when using Workers.
 ---
 
 # Known issues
@@ -42,6 +45,34 @@ const request = new Request(url, incomingRequest);
 request.headers.delete('cf-workers-preview-token');
 return await fetch(request);
 ```
+
+## Fetch API in CNAME setup
+
+When you make a subrequest using [`fetch()`](/workers/runtime-apis/fetch/) from a Worker, the Cloudflare DNS resolver is used. When a zone has a [Partial (CNAME) setup](/dns/zone-setups/partial-setup/), all hostnames that the Worker needs to be able to resolve require a dedicated DNS entry in Cloudflare's DNS setup. Otherwise the Fetch API call will fail with status code [530 (1016)](/support/troubleshooting/cloudflare-errors/troubleshooting-cloudflare-1xxx-errors#error-1016-origin-dns-error).
+
+
+Setup with missing DNS records in Cloudflare DNS
+
+    // Zone in partial setup: example.com
+    // DNS records at Authoritative DNS: sub1.example.com, sub2.example.com, ...
+    // DNS records at Cloudflare DNS: sub1.example.com
+
+    "sub1.example.com/"
+    // -> Can be resolved by Fetch API
+    "sub2.example.com/"
+    // -> Cannot be resolved by Fetch API, will lead to 530 status code
+    
+    
+After adding `sub2.example.com` to Cloudflare DNS
+
+    // Zone in partial setup: example.com
+    // DNS records at Authoritative DNS: sub1.example.com, sub2.example.com, ...
+    // DNS records at Cloudflare DNS: sub1.example.com, sub2.example.com
+
+    "sub1.example.com/"
+    // -> Can be resolved by Fetch API
+    "sub2.example.com/"
+    // -> Can be resolved by Fetch API
 
 ## Custom ports
 

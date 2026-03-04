@@ -6,16 +6,9 @@ weight: 3
 
 # Mutual TLS
 
-<details>
-<summary>Feature availability</summary>
-<div>
-
-| Operating Systems | [WARP mode required](/cloudflare-one/connections/connect-devices/warp/configure-warp/warp-modes/) | [Zero Trust plans](https://www.cloudflare.com/teams-pricing/) |
-| ----------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| All systems       | WARP not required                                                                         | Enterprise plans                                              |
-
-</div>
-</details>
+{{<Aside type="note">}}
+Only available on Enterprise plans.
+{{</Aside>}}
 
 [Mutual TLS (mTLS) authentication](https://www.cloudflare.com/learning/access-management/what-is-mutual-tls/) ensures that traffic is both secure and trusted in both directions between a client and server. It allows requests that do not log in with an identity provider (like IoT devices) to demonstrate that they can reach a given resource. Client certificate authentication is also a second layer of security for team members who both log in with an identity provider (IdP) and present a valid client certificate.
 
@@ -35,35 +28,37 @@ mTLS is checked on a per host basis. Access sets a flag for when a client certif
 
 To enforce mTLS authentication from [Zero Trust](https://one.dash.cloudflare.com):
 
-1. Contact your account team to enable mTLS on your account.
-2. Go to **Access** > **Service Auth** > **Mutual TLS**.
-3. Select **Add mTLS Certificate**.
-4. Give the Root CA any name.
-5. Paste the content of the `ca.pem` file into the **Certificate content** field.
-6. In **Associated hostnames**, enter the fully-qualified domain names (FQDN) that will use this certificate.
+1. Go to **Access** > **Service Auth** > **Mutual TLS**.
+2. Select **Add mTLS Certificate**.
+3. Give the Root CA any name.
+4. Paste the content of the `ca.pem` file into the **Certificate content** field.
+
+   {{<render file="_byo-ca-mtls-cert-requirements.md" productFolder="ssl" >}}
+
+5. In **Associated hostnames**, enter the fully-qualified domain names (FQDN) that will use this certificate.
 
    These FQDNs will be the hostnames used for the resources being protected in the [Access policy](/cloudflare-one/policies/access/). You must associate the Root CA with the FQDN that the application being protected uses.
 
-7. Select **Save**.
+6. Select **Save**.
 
    If your zone is using an intermediate certificate in addition to the root certificate, upload the entire chain.
 
-8. Next, go to **Access** > **Applications**.
+7. Next, go to **Access** > **Applications**.
 
-9. Find the application you would like to enforce mTLS on and select **Edit**. The application must be included in the **Associated hostnames** list from Step 5.
+8. Find the application you would like to enforce mTLS on and select **Edit**. The application must be included in the **Associated hostnames** list from Step 5.
 
-10. Create a new (or amend an existing) [Access policy](/cloudflare-one/policies/access/).
+9. Create a new (or amend an existing) [Access policy](/cloudflare-one/policies/access/).
 
    If this is for a client who does not need to log in through an IdP, set the policy **Action** to _Service Auth_.
 
-11. Add an mTLS authentication rule using the following selectors:
+10. Add an mTLS authentication rule using the following selectors:
 
     | Selector              | Description                                                                               |
     | --------------------- | ----------------------------------------------------------------------------------------- |
     | **Common Name**       | Only client certificates with a specific common name will be allowed to proceed.          |
     | **Valid Certificate** | Any client certificate that can authenticate with the Root CA will be allowed to proceed. |
 
-12. Save the policy.
+11. Save the policy.
 
 {{<Aside type="warning">}}
 
@@ -247,5 +242,14 @@ You will need to add the CRL to your server or enforce the revocation in a Cloud
 ## Known limitations
 
 mTLS does not currently work for:
+
 - HTTP/3 traffic
-- Cloudflare Pages site served on a [custom domain](/pages/platform/custom-domains/)
+- Cloudflare Pages site served on a [custom domain](/pages/configuration/custom-domains/)
+
+## Set up alerts for mutual TLS certificates
+
+You can configure alerts to receive notifications before your mutual TLS certificates expire.
+
+{{<available-notifications product="SSL/TLS" notificationName="Access mTLS Certificate Expiration Alert">}}
+
+{{<render file="_get-started.md" productFolder="notifications" >}}

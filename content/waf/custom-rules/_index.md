@@ -1,8 +1,7 @@
 ---
 pcx_content_type: concept
 title: Custom rules
-weight: 3
-layout: single
+weight: 4
 ---
 
 # Custom rules
@@ -20,7 +19,7 @@ Custom rules are evaluated in order, and some actions like _Block_ will stop the
 Refer to the [migration guide](/waf/reference/migration-guides/firewall-rules-to-custom-rules/#main-differences) to learn more about the differences between firewall rules and custom rules.
 {{</Aside>}}
 
-To define sets of custom rules that apply to more than one zone, use [custom rulesets](/waf/custom-rulesets/), which require an Enterprise plan with a paid add-on.
+To define sets of custom rules that apply to more than one zone, use [custom rulesets](/waf/custom-rules/custom-rulesets/), which require an Enterprise plan with a paid add-on.
 
 ---
 

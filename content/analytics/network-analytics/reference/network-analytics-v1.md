@@ -1,17 +1,18 @@
 ---
 pcx_content_type: reference
 source: https://support.cloudflare.com/hc/en-us/articles/360038696631-Understanding-Cloudflare-Network-Analytics-v1
-title: Cloudflare Network Analytics v1
+title: Network Analytics v1 (deprecated)
 meta:
-  description: Network Analytics provides near real-time visibility into network and transport-layer traffic patterns and DDoS attacks.
+  title: Cloudflare Network Analytics v1 (deprecated)
+  description: Network Analytics v1 (deprecated) provides near real-time visibility into network and transport-layer traffic patterns and DDoS attacks.
 weight: 3
 ---
 
-# Cloudflare Network Analytics v1
+{{<heading-pill style="deprecated">}} Cloudflare Network Analytics v1 {{</heading-pill>}}
 
-{{<Aside type="note" header="Network Analytics v2 is now available">}}
--   For more information on the Network Analytics v2 (NAv2) dashboard, refer to [Cloudflare Network Analytics](/analytics/network-analytics/).
--   There is also a new version of the Network Analytics GraphQL API. If you are still using NAv1, you should migrate from NAv1 to NAv2 by following the [migration guide](/analytics/graphql-api/migration-guides/network-analytics-v2/).
+{{<Aside type="warning">}}
+- {{<render file="_network-analytics-v1-deprecation.md">}}
+- If you are using the Network Analytics GraphQL API, you should migrate from NAv1 to NAv2 by following the [migration guide](/analytics/graphql-api/migration-guides/network-analytics-v2/).
 {{</Aside>}}
 
 Access to Network Analytics requires the following:
@@ -151,6 +152,8 @@ Do the following:
 
 The table below shows the range of fields, operators, and values you can use to filter Network Analytics.
 
+{{<table-wrap>}}
+
 | Field | Operators | Value |
 | --- | --- | --- |
 | Action | Equals<br/>Does not equal | **Allow:** Traffic allowed through Cloudflare's automated DDoS protection systems. May also include traffic mitigated by Firewall Rules, flowtrackd and L7 rules.<br/>**Block:** Traffic blocked by Cloudflare's automated DDoS protection systems.<br/>**Connection-tracking:** Applies only exclusively to L7, as Magic Transit is excluded from scope and no conntrack ever runs for Magic Transit prefixes.<br/>**Rate-limit:** Can be applied per source IP, subnet or any connection. The decision is made programmatically based on heuristics.<br/>**Monitor:** Attacks which were identified but have chosen to simply observe and not mitigate with any rule. |
@@ -167,6 +170,8 @@ The table below shows the range of fields, operators, and values you can use to 
 | Source IP | Equals Does not equal | IP address |
 | Source port | Equals Does not equal<br/>Greater than<br/>Greater than or equals<br/>Less than<br/>Less than or equals | Port number<br/>Port range |
 | TCP Flag | Equals<br/>Does not equal<br/>Contains | SYN, SYN-ACK, FIN, ACK, RST |
+
+{{</table-wrap>}}
 
 ___
 
@@ -231,7 +236,7 @@ ___
 
 ### Export activity log data 
 
-You can export up to 500 raw events from the Activity log at a time. This option is useful when you need to combine and analyze Cloudflare data with data stored in a separate system or database, such as a security information and event management system (SIEM).
+You can export up to 500 raw events from the Activity log at a time. This option is useful when you need to combine and analyze Cloudflare data with data stored in a separate system or database, such as a {{<glossary-tooltip term_id="SIEM">}}SIEM system{{</glossary-tooltip>}}.
 
 To export log data, select **Export**.
 

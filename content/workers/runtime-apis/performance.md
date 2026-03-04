@@ -1,19 +1,21 @@
 ---
 pcx_content_type: configuration
 title: Performance and timers
+meta:
+  description: Measure timing, performance, and timing of subrequests and other operations.
 ---
 
 # Performance
 
 ## Background
 
-The Workers runtime supports a subset of the [`Performance` API](https://developer.mozilla.org/en-US/docs/Web/API/Performance), used to measure timing and performance and timing of subrequests and other operations.
+The Workers runtime supports a subset of the [`Performance` API](https://developer.mozilla.org/en-US/docs/Web/API/Performance), used to measure timing and performance, as well as timing of subrequests and other operations.
 
 ### `performance.now()`
 
 The [`performance.now()` method](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now) returns timestamp in milliseconds, representing the time elapsed since `performance.timeOrigin`.
 
-When Workers are deployed to Cloudflare, as a security measure to [mitigate against Spectre attacks](/workers/learning/security-model/#step-1-disallow-timers-and-multi-threading), APIs that return timers, including [`performance.now()`](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now) and [`Date.now()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now), only advance or increment after I/O occurs. Consider the following examples:
+When Workers are deployed to Cloudflare, as a security measure to [mitigate against Spectre attacks](/workers/reference/security-model/#step-1-disallow-timers-and-multi-threading), APIs that return timers, including [`performance.now()`](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now) and [`Date.now()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now), only advance or increment after I/O occurs. Consider the following examples:
 
 ```typescript
 ---
@@ -43,8 +45,8 @@ In local development, however, timers will increment regardless of whether I/O h
 
 ### `performance.timeOrigin`
 
-The [`performance.timeOrigin()`](https://developer.mozilla.org/en-US/docs/Web/API/Performance/timeOrigin) API is a read-only property that returns a baseline timestamp to base other measurements off of.
+The [`performance.timeOrigin`](https://developer.mozilla.org/en-US/docs/Web/API/Performance/timeOrigin) API is a read-only property that returns a baseline timestamp to base other measurements off of.
 
-In the Workers runtime, calling `timeOrigin()` returns 0.
+In the Workers runtime, the `timeOrigin` property returns 0.
 
 

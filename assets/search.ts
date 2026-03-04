@@ -20,24 +20,58 @@
       appId: '8MU1G3QO9P',
       apiKey,
       container: '#algolia',
-      maxResultsPerGroup: 20,
+      maxResultsPerGroup: 10,
       insights: true,
+      translations: {
+        modal: {
+        noResultsScreen: {
+          reportMissingResultsText: "",
+          reportMissingResultsLinkText: 'View all results'
+        }
+      }
+      },
+      getMissingResultsUrl({ query }: {query: string}) {
+        return `/search/?q=${query}`;
+      },
       searchParameters: {
         optionalFilters: facetFilters
       },
-      transformItems: items => {
-        return items.filter(item => {
+      // TODO: improve types
+      transformItems: (items: any) => {
+        return items.filter((item: any) => {
           const url = new URL(item.url)
           return url.pathname.endsWith('/')
         })
-      }
+      },
+      // TODO: improve types
+      resultsFooterComponent({ state }: any) {
+        return {
+          // The HTML `tag`
+          type: 'a',
+          ref: undefined,
+          constructor: undefined,
+          key: state.query,
+          // Its props
+          props: {
+            target: "_blank",
+            href: `/search/?q=${state.query}`,
+            // Raw text rendered in the HTML element
+            children: `View all results`,
+            onClick: () => {
+              zaraz.track("view all results", {query: state.query})
+            },
+          },
+          __v: null,
+        };
+      },
     });
 
     // instantiate mobile search button
     let button = $('#MobileSearch')
     if (button) {
       button.addEventListener('click', () => {
-        document.querySelector(".DocSearch.DocSearch-Button").click()
+        const docsSearchButton = document.querySelector<HTMLButtonElement>('.DocSearch.DocSearch-Button')
+        docsSearchButton?.click()
       });
     }
   }

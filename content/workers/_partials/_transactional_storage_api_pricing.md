@@ -5,11 +5,9 @@ _build:
   list: never
 ---
 
-The Durable Objects [Transactional Storage API](/durable-objects/api/transactional-storage-api) is only accessible from within Durable Objects. 
+The Durable Objects [Transactional Storage API](/durable-objects/api/transactional-storage-api) is only accessible from within Durable Objects.
 
 Durable Objects do not have to use the Transactional Storage API, but if your code does call methods on `state.storage`, it will incur the following additional charges:
-
-{{<table-wrap>}}
 
 |                                  | Paid plan                  |
 | -------------------------------- | -------------------------- |
@@ -17,8 +15,6 @@ Durable Objects do not have to use the Transactional Storage API, but if your co
 | Write request units<sup>3</sup>  | 1 million, + $1.00/million |
 | Delete requests<sup>4</sup>      | 1 million, + $1.00/million |
 | Stored data<sup>5</sup>          | 1 GB, + $0.20/ GB-month    |
-
-{{</table-wrap>}}
 
 <sup>1</sup> A request unit is defined as 4 KB of data read or written. A request that writes or reads more than 4 KB will consume multiple units, for example, a 9 KB write will consume 3 write request units.
 
@@ -30,4 +26,4 @@ Durable Objects do not have to use the Transactional Storage API, but if your co
 
 <sup>5</sup>  Durable Objects will be billed for stored data until the data is removed. Once the data is removed, the object will be cleaned up automatically by the system.
 
-Requests that hit the [Durable Objects in-memory cache](/durable-objects/learning/in-memory-state/) or that use the [multi-key versions of `get()`/`put()`/`delete()` methods](/durable-objects/api/transactional-storage-api/) are billed the same as if they were a normal, individual request for each key.
+Requests that hit the [Durable Objects in-memory cache](/durable-objects/reference/in-memory-state/) or that use the [multi-key versions of `get()`/`put()`/`delete()` methods](/durable-objects/api/transactional-storage-api/) are billed the same as if they were a normal, individual request for each key.

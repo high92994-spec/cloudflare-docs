@@ -9,7 +9,7 @@ weight: 3
 While in [HTTP requests](/radar/investigate/http-requests) you can examine all kinds of web requests, in application layer attacks you have access only to mitigated HTTP requests. These requests can be mitigated by one of several Cloudflare products, like [WAF](/waf/), [Cloudflare DDoS Protection](/ddos-protection/), [Cloudflare bot solutions](/bots/) and others.
 
 {{<Aside type="note" header="Mitigated traffic">}}
-Mitigated traffic is any HTTP request from an end-user that has a terminating action applied by the Cloudflare platform. These include actions like `BLOCK` or [challenges](/firewall/cf-firewall-rules/cloudflare-challenges/).
+Mitigated traffic is any HTTP request from an end-user that has a terminating action applied by the Cloudflare platform. These include actions like `BLOCK` or [challenges](/waf/reference/cloudflare-challenges/).
 {{</Aside>}}
 
 Since we are examining attacks, we can inspect both sides of an attack — both the source location and the target location of the attack. For the source of the attack Cloudflare uses the location the attack is coming from associated with the IP (note that the human orchestrator of the attack may be in a different location than the computer the attack is originating from). For the target location of the attacks, Cloudflare uses the billing location associated with the zone under attack.
@@ -29,8 +29,8 @@ Like in [HTTP requests](/radar/investigate/http-requests), these endpoints can b
 Let us examine the global distribution of mitigated requests by product.
 
 ```bash
-curl -X GET "https://api.cloudflare.com/client/v4/radar/attacks/layer7/timeseries_groups?aggInterval=1h&dateRange=1d&name=attacks&format=json" \
-     -H "Authorization: Bearer <API_TOKEN>"
+curl "https://api.cloudflare.com/client/v4/radar/attacks/layer7/timeseries_groups?aggInterval=1h&dateRange=1d&name=attacks&format=json" \
+--header "Authorization: Bearer <API_TOKEN>"
 ```
 
 From the abbreviated response below, we can conclude that distributed denial-of-service (DDoS) attacks make up the majority of the requests — which makes sense since DDoS attacks, by their very nature, will perform more requests. This is followed by WAF and then I reputation requests.
@@ -69,8 +69,8 @@ For more information refer to [Get layer 7 attacks by mitigation technique, over
 We can also filter by source location and examine attacks coming from a specific place - in the following example, we examine attacks coming from Great Britain:
 
 ```bash
-curl -X GET "https://api.cloudflare.com/client/v4/radar/attacks/layer7/summary?location=GB&name=attacks_gb&aggInterval=1h&dateRange=1d&format=json" \
-     -H "Authorization: Bearer <API_TOKEN>"
+curl "https://api.cloudflare.com/client/v4/radar/attacks/layer7/summary?location=GB&name=attacks_gb&aggInterval=1h&dateRange=1d&format=json" \
+--header "Authorization: Bearer <API_TOKEN>"
 ```
 
 ```json
@@ -96,8 +96,8 @@ For more information refer to [Get layer 7 attacks summary](/api/operations/rada
 In the following example, we will examine the top locations being targeted in application layer attacks, in the last 24 hours:
 
 ```bash
-curl -X GET "https://api.cloudflare.com/client/v4/radar/attacks/layer7/top/locations/target?name=attacks_target&limit=5&dateRange=1d&format=json" \
-     -H "Authorization: Bearer <API_TOKEN>"
+curl "https://api.cloudflare.com/client/v4/radar/attacks/layer7/top/locations/target?name=attacks_target&limit=5&dateRange=1d&format=json" \
+--header "Authorization: Bearer <API_TOKEN>"
 ```
 
 ```json
@@ -152,8 +152,8 @@ Which source-target location pairs constitute the biggest attacks in the last 24
 How big an attack is, or the attack magnitude, can be defined by the number of mitigated requests (the default) or by the number of total zones under attack.
 
 ```bash
-curl -X GET "https://api.cloudflare.com/client/v4/radar/attacks/layer7/top/attacks?limit=5&dateRange=1d&magnitude=MITIGATED_REQUESTS&format=json" \
-     -H "Authorization: Bearer <API_TOKEN>"
+curl "https://api.cloudflare.com/client/v4/radar/attacks/layer7/top/attacks?limit=5&dateRange=1d&magnitude=MITIGATED_REQUESTS&format=json" \
+--header "Authorization: Bearer <API_TOKEN>"
 ```
 
 A typical response will be similar to the following:

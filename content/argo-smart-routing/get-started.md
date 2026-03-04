@@ -20,7 +20,7 @@ To enable [Argo Smart Routing](https://dash.cloudflare.com/?to=/:account/:zone/t
 3. For **Argo Smart Routing**, switch the toggle to **On**.
 4. Provide your billing information.
 
-    * If you do not have a [billing profile](/fundamentals/setup/account-setup/create-billing-profile/), enter your billing information.
+    * If you do not have a [billing profile](/fundamentals/subscriptions-and-billing/create-billing-profile/), enter your billing information.
 
     * If you have a billing profile, confirm your billing information.
 
@@ -29,7 +29,7 @@ To enable [Argo Smart Routing](https://dash.cloudflare.com/?to=/:account/:zone/t
 
 To enable or disable Argo Smart Routing with the API, send a [`PATCH`](/api/operations/argo-smart-routing-patch-argo-smart-routing-setting) request with the `value` parameter set to your desired setting (`"on"` or `"off"`).
 
-You will need to already have a [billing profile](/fundamentals/setup/account-setup/create-billing-profile/) on your account to enable Argo Smart Routing.
+You will need to already have a [billing profile](/fundamentals/subscriptions-and-billing/create-billing-profile/) on your account to enable Argo Smart Routing.
 
 {{</tab>}}
 {{</tabs>}}
@@ -42,8 +42,8 @@ If Cloudflare mitigates attacks on your site - whether through DDoS protection, 
 
 {{<render file="_ubb-recommendation.md" productFolder="fundamentals">}}
 
-## Enable Argo Tiered Cache
+## Enable Tiered Cache
 
-[Cache](/cache/) works by storing a copy of website content at Cloudflare's data centers. Argo Tiered Cache divides these data centers into a hierarchy based on location. This behavior allows Cloudflare to deliver content from data centers closest to your visitor.
+[Cache](/cache/) works by storing a copy of website content at Cloudflare's data centers. [Tiered Cache](/cache/how-to/tiered-cache/) divides these data centers into a hierarchy based on location. This behavior allows Cloudflare to deliver content from data centers closest to your visitor.
 
-Argo Smart Routing and Argo Tiered Cache work together to provide the most efficient connection for visitors to your site. For more information, go to [Tiered Cache](/cache/how-to/tiered-cache/).
+Argo Smart Routing and Tiered Cache work together to provide the most efficient connection for visitors to your site. For more information, go to [Tiered Cache](/cache/how-to/tiered-cache/).

@@ -12,12 +12,12 @@ Updates will cause `cloudflared` to restart which will impact traffic currently 
 
 To update `cloudflared` for a tunnel [created through the dashboard](/cloudflare-one/connections/connect-networks/get-started/create-remote-tunnel/):
 
-{{<tabs labels="Windows | macOS | Debian | Red Hat | Docker">}}
+{{<tabs labels="Windows | macOS | Debian | Red Hat | Docker | Other">}}
 {{<tab label="windows" no-code="true">}}
 
 Run the following command:
 
-```bash
+```powershell
 PS C:\> cloudflared update
 ```
 
@@ -41,10 +41,28 @@ This updates `cloudflared` and automatically restarts the service.
 {{</tab>}}
 {{<tab label="debian" no-code="true">}}
 
+**If installed via apt:**
+
 1. Update the `cloudflared` package:
 
 ```sh
-$ curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && sudo dpkg -i cloudflared.deb
+$ sudo apt-get upgrade cloudflared
+```
+
+2. Restart the service:
+
+```sh
+$ sudo systemctl restart cloudflared.service
+```
+
+**If installed manually via `dpkg -i`:**
+
+You can check if `cloudflared` was installed by a package manager by running `ls -la /usr/local/etc/cloudflared/` and looking for `.installedFromPackageManager` in the output.
+
+1. Update the `cloudflared` package:
+
+```sh
+$ curl --location --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && sudo dpkg -i cloudflared.deb
 ```
 
 2. Restart the service:
@@ -71,7 +89,7 @@ $ sudo systemctl restart cloudflared.service
 {{</tab>}}
 {{<tab label="docker" no-code="true">}}
 
-1. In Zero Trust, go to **Access** > **Tunnels**.
+1. In Zero Trust, go to **Networks** > **Tunnels**.
 2. Select your tunnel and select **Configure**.
 3. Select **Docker** and copy the installation command shown in the dashboard.
 4. Paste this command into a terminal window.
@@ -79,17 +97,18 @@ $ sudo systemctl restart cloudflared.service
 This creates a new container from the latest `cloudflared` image. You can now delete the old container.
 
 {{</tab>}}
-{{</tabs>}}
+{{<tab label="other" no-code="true">}}
 
-## Locally-managed tunnels
-
-If you installed `cloudflared` from GitHub binaries or from source, run the following command:
+If you installed `cloudflared` from GitHub-provided binaries or from source, run the following command:
 
 ```sh
 $ cloudflared update
 ```
 
-If you installed `cloudflared` with a package manager, you must update it using the same package manager. On Linux, you can check if `cloudflared` is owned by a package manager by running `ls -la /usr/local/etc/cloudflared/` and looking for `.installedFromPackageManager` in the output.
+If you installed `cloudflared` with a package manager, you must update it using the same package manager. You can check if `cloudflared` was installed by a package manager by running `ls -la /usr/local/etc/cloudflared/` and looking for `.installedFromPackageManager` in the output.
+
+{{</tab>}}
+{{</tabs>}}
 
 ## Update with Cloudflare Load Balancer
 
@@ -110,11 +129,17 @@ If you are not using Cloudflare's Load Balancer, you can use multiple instances 
 3. In the Cloudflare DNS dashboard, [replace](/cloudflare-one/connections/connect-networks/routing-to-tunnel/dns/) the address of the current instance of `cloudflared` with the address of the new instance. Save the record.
 4. Remove the now-inactive instance of `cloudflared`.
 
+{{<Aside type="note" header="Traffic handling">}}
+
+When the old replica is stopped, it will drop long-lived HTTP requests (for example, WebSocket) and TCP connections (for example, SSH). UDP flows will also be dropped, as they are modeled based on timeouts. When the new replica connects, it will handle all new traffic, including new HTTP requests, TCP connections, and UDP flows.
+
+{{</Aside>}}
+
 ### Run multiple instances in Windows
 
 Windows systems require services to have a unique name and display name. You can run multiple instances of `cloudflared` by creating `cloudflared` services with unique names.
 
-1. Install and configure `cloudflared`. 
+1. Install and configure `cloudflared`.
 2. Next, create a service with a unique name and point to the `cloudflared` executable and configuration file.
 
   ```bash

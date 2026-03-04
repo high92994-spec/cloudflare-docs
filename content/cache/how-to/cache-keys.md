@@ -7,50 +7,30 @@ meta:
 
 # Cache Keys
 
-A Cache Key is an identifier that Cloudflare uses for a file in our cache, and the Cache Key Template defines the identifier for a given HTTP request. For example, consider the following HTTP request on a TLS connection:
+A Cache Key is an identifier that Cloudflare uses for a file in our cache, and the Cache Key Template defines the identifier for a given HTTP request. 
 
-```bash
-GET /logo.jpg HTTP/1.1
-Host: www.cloudflare.com
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36
-Accept: image/jpg
-```
-
-As we can see from the example, the default cache key includes:
+A default cache key includes:
 
 1.  Full URL:
-    - scheme - not shown above, but could be HTTP or HTTPS.  
-    - host - which in this example is `www.cloudflare.com`
-    - URI with query string - in this example is `/logo.jpg`
+    - scheme - could be HTTP or HTTPS.
+    - host - for example, `www.cloudflare.com`
+    - URI with query string - for example, `/logo.jpg`
 2.  Origin header sent by client (for CORS support).
 3.  `x-http-method-override`, `x-http-method`, and `x-method-override` headers.
-4.  `x-forwarded-host`, `x-host`, `x-forwarded-scheme`, `x-original-url`, `x-rewrite-url`, and `forwarded` headers.
-
-{{<Aside type="warning" header="Warning">}}
-
-Using Custom Cache Keys may result in cache sharding and reduction of your cache hit ratio.
-
-{{</Aside>}}
+4.  `x-forwarded-host`, `x-host`, `x-forwarded-scheme` (unless http or https), `x-original-url`, `x-rewrite-url`, and `forwarded` headers.
 
 ## Create custom cache keys
 
-A [Cache Key](/cache/how-to/cache-keys/) is an identifier that Cloudflare uses for a file in our cache, and the Cache Key Template defines the identifier for a given HTTP request.
+Custom cache keys let you precisely set the cacheability setting for any resource. They provide the benefit of more control, though they may reduce your cache hit rate and result in cache sharding:
 
-1.  Log in to your Cloudflare account.
-2.  Select the domain that requires changes to the Cache Key Template.
-3.  Select **Rules** > **Page Rules**.
-4.  Select **Create Page Rule**.
-5.  Under **If the URL matches**, enter the URL to match.
-6.  Under **Then the settings are**, choose **Custom Cache Key** from the dropdown.
-7.  Select the appropriate _Query String_ setting.
-8.  (Optional) Select **Advanced** and enter appropriate settings for:
-    - `Headers`
-    - `Cookie`
-    - `Host`
-    - `User Features`
-9.  Choose a save option:
-    - **Save as Draft** to save the rule and leave it disabled. Note that disabled rules count towards the number of rules allowed for your domain.
-    - **Save and Deploy** to save the rule and enable it immediately.
+1. Log in to your [Cloudflare dashboard](https://dash.cloudflare.com), and select your account and domain.
+2. Go to **Caching** > **Cache Rules**.
+3. Select **Create rule**.
+4. Under **When incoming requests match**, define the [rule expression](/ruleset-engine/rules-language/expressions/edit-expressions/#expression-builder).
+5. Under **Then**, in the **Cache eligibility** section, select **Eligible for cache**.
+6. Add the **Cache Key** setting to the rule and select the appropriate **Query String** setting.
+7. You can also select settings for **Headers**, **Cookie**, **Host**, and **User**.
+8. To save and deploy your rule, select **Deploy**. If you are not ready to deploy your rule, select **Save as Draft**.
 
 ## Cache Key Template
 
@@ -124,7 +104,7 @@ Currently, you can only exclude the `Origin` header. The `Origin` header is alwa
 Host determines which host header to include in the Cache Key.
 
 - If `resolved: false`, Cloudflare includes the `Host` header in the HTTP request sent to the origin.
-- If `resolved: true`, Cloudflare includes the `Host` header that was resolved to get the `origin IP` for the request. In this scenario, the `Host` header may be different from the header actually sent if the [Cloudflare Resolve Override](/support/page-rules/using-resolve-override-in-page-rules/) feature is used.
+- If `resolved: true`, Cloudflare includes the `Host` header that was resolved to get the `origin IP` for the request. In this scenario, the `Host` header may be different from the header actually sent if the [Cloudflare Resolve Override](/rules/page-rules/how-to/override-url-or-ip-address/) feature is used.
 
 ### Cookie
 
@@ -134,7 +114,7 @@ Like `query_string` or `header`, `cookie` controls which cookies appear in the C
 
 You cannot include cookies specific to Cloudflare. Cloudflare cookies are prefixed with `__cf`, for example, `__cflb`
 
-#### User features
+### User features
 
 User feature fields add features about the end-user (client) into the Cache Key.
 
@@ -148,4 +128,4 @@ User feature fields add features about the end-user (client) into the Cache Key.
 
 ## Limitations
 
-The Prefetch feature is not compatible with the custom cache keys. With custom cache key Page Rules or Cache Rules, the custom cache key is used to cache all assets. However, Prefetch always uses the default cache key. This results in a key mismatch.
+The Prefetch feature is not compatible with the custom cache keys. With Cache Rules, the custom cache key is used to cache all assets. However, Prefetch always uses the default cache key. This results in a key mismatch.

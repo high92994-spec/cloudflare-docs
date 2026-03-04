@@ -2,6 +2,7 @@
 pcx_content_type: configuration
 title: Upstash
 ---
+
 # Upstash
 
 [Upstash](https://upstash.com/) is a serverless database with Redis\* and Kafka API. Upstash also offers QStash, a task queue/scheduler designed for the serverless.
@@ -18,11 +19,11 @@ To set up an integration with Upstash:
     - Use the CLI directly from your Upstash console.
     - Alternatively, install [redis-cli](https://redis.io/docs/getting-started/installation/) locally and run the following commands. 
     ```sh
-    ➜ set GB "Ey up?"
+    $ set GB "Ey up?"
     OK
-    ➜ set US "Yo, what’s up?"
+    $ set US "Yo, what’s up?"
     OK
-    ➜ set NL "Hoi, hoe gaat het?"
+    $ set NL "Hoi, hoe gaat het?"
     OK
     ```
 3. Add the Upstash Redis integration to your Worker:

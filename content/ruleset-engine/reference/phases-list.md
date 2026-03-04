@@ -6,6 +6,8 @@ weight: 1
 
 # Phases list
 
+The following tables list the [phases](/ruleset-engine/about/phases/) of Cloudflare products powered by the Ruleset Engine, in the order those phases are executed. Some products such as the Cloudflare Web Application Firewall have more than one associated phase.
+
 ## Network layer
 
 Network-layer phases apply to packets received on the Cloudflare global network.
@@ -15,7 +17,7 @@ Network-layer phases apply to packets received on the Cloudflare global network.
 Phase name       | Used in product/feature
 -----------------|-------------------------------------
 `ddos_l4`        | [Network-layer DDoS Attack Protection](/ddos-protection/managed-rulesets/network/configure-api/)
-`magic_transit`  | [Magic Firewall](/magic-firewall/reference/examples/)
+`magic_transit`  | [Magic Firewall](/magic-firewall/how-to/add-rules/)
 `mt_managed`     | [Magic Firewall managed rulesets](/magic-firewall/how-to/enable-managed-rulesets/)
 `mt_ids_managed` | [Magic Firewall Intrusion Detection System (IDS)](/magic-firewall/about/ids/)
 
@@ -62,9 +64,10 @@ The phases execute in the order they appear in the table.
 
 | Phase name | Used in product/feature |
 |---|---|
-| http_custom_errors | [Custom error responses](/rules/custom-error-responses/) |
+| `http_custom_errors` | [Custom error responses](/rules/custom-error-responses/) |
 | _N/A_ (internal phase) | [Managed Transforms](/rules/transform/managed-transforms/) |
 | `http_response_headers_transform` | [HTTP Response Header Modification Rules](/rules/transform/response-header-modification/create-api/) |
+| `http_ratelimit` | [Rate limiting rules](/waf/rate-limiting-rules/create-api/) (when they use response information) |
 | `http_response_compression` | [Compression Rules](/rules/compression-rules/) |
 | `http_response_firewall_managed` | [Cloudflare Sensitive Data Detection](/waf/managed-rules/) (Data Loss Prevention) |
 | `http_log_custom_fields` | [Logpush custom fields](/logs/reference/custom-fields/) |

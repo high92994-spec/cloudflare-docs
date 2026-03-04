@@ -9,7 +9,7 @@ title: Custom Domains
 
 Custom Domains allow you to connect your Worker to a domain or subdomain, without having to make changes to your DNS settings or perform any certificate management. After you set up a Custom Domain for your Worker, Cloudflare will create DNS records and issue necessary certificates on your behalf. The created DNS records will point directly to your Worker. Unlike [Routes](/workers/configuration/routing/routes/#set-up-a-route), Custom Domains point all paths of a domain or subdomain to your Worker.
 
-Custom Domains are routes to a domain or subdomain (such as `example.com` or `shop.example.com`) within a Cloudflare zone where the Worker is the origin.`
+Custom Domains are routes to a domain or subdomain (such as `example.com` or `shop.example.com`) within a Cloudflare zone where the Worker is the origin.
 
 Custom Domains are recommended if you want to connect your Worker to the Internet and do not have an application server that you want to always communicate with.  If you do have external dependencies, you can create a `Request` object with the target URI, and use `fetch()` to reach out.
 
@@ -40,7 +40,7 @@ To set up a Custom Domain in the dashboard:
 
 1. Log in to the [Cloudflare dashboard](https://dash.cloudflare.com) and select your account.
 2. Select **Workers & Pages** and in **Overview**, select your Worker.
-3. Go to **Triggers** > **Custom Domains** > **Add Custom Domain**.
+3. Go to **Settings** > **Triggers** > **Custom Domains** > **Add Custom Domain**.
 4. Enter the domain you want to configure for your Worker.
 5. Select **Add Custom Domain**.
 
@@ -67,7 +67,7 @@ routes = [
 
 ## Worker to Worker communication
 
-On the same zone, the only way for a Worker to communicate with another Worker running on a [route](/workers/configuration/routing/routes/#set-up-a-route), or on a [`workers.dev`](/workers/configuration/routing/routes/#routes-with-workersdev) subdomain, is via [service bindings](/workers/configuration/bindings/about-service-bindings/). 
+On the same zone, the only way for a Worker to communicate with another Worker running on a [route](/workers/configuration/routing/routes/#set-up-a-route), or on a [`workers.dev`](/workers/configuration/routing/routes/#routes-with-workersdev) subdomain, is via [service bindings](/workers/runtime-apis/bindings/service-bindings/). 
 
 On the same zone, if a Worker is attempting to communicate with a target Worker running on a Custom Domain rather than a route, the limitation is removed. Fetch requests sent on the same zone from one Worker to another Worker running on a Custom Domain will succeed without a service binding.
 

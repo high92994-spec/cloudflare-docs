@@ -19,7 +19,7 @@ CORS is used when you interact with a bucket from a web browser, and you have tw
 ## Prerequisites
 
 Before you configure CORS, you must have:
- 
+
 - An R2 bucket with at least one object. If you need to create a bucket, refer to [Create a public bucket](/r2/buckets/public-buckets/).
 - A domain you can use to access the object. This can also be a `localhost`.
 - (Optional) Access keys. An access key is only required when creating a presigned URL.
@@ -70,7 +70,7 @@ console.log(url);
 Test the presigned URL by uploading an object using cURL. The example below would upload the `123` text to R2 with a `Content-Type` of `text/plain`.
 
 ```sh
-$ curl -X PUT <URL> -H "Content-Type: text/plain" -d "123"
+$ curl --request PUT <URL> --header "Content-Type: text/plain" --data "123"
 ```
 
 ## Add CORS policies from the dashboard
@@ -90,7 +90,7 @@ The following fields in an R2 CORS policy map to HTTP response headers. These re
 
 | Field Name           | Description                                          | Example  |
 |----------------------|------------------------------------------------------|----------|
-| `AllowedOrigins`     | Specifies the value for the `Access-Control-Allow-Origin` header R2 sets when requesting objects in a bucket from a browser. | If a website at `www.example.com` needs to access resources (e.g. fonts, scripts) on a [custom domain](/r2/buckets/public-buckets/#custom-domains) of `static.example.com`, you would set `https://static.example.com` as an `AllowedOrigin`. |
+| `AllowedOrigins`     | Specifies the value for the `Access-Control-Allow-Origin` header R2 sets when requesting objects in a bucket from a browser. | If a website at `www.test.com` needs to access resources (e.g. fonts, scripts) on a [custom domain](/r2/buckets/public-buckets/#custom-domains) of `static.example.com`, you would set `https://www.test.com` as an `AllowedOrigin`. |
 | `AllowedMethods`     | Specifies the value for the `Access-Control-Allow-Methods` header R2 sets when requesting objects in a bucket from a browser. | `GET`, `POST`, `PUT` |
 | `AllowedHeaders`     | Specifies the value for the `Access-Control-Allow-Headers` header R2 sets when requesting objects in this bucket from a browser.Cross-origin requests that include custom headers (e.g. `x-user-id`) should specify these headers as `AllowedHeaders`. | `x-requested-by`, `User-Agent` |
 | `ExposeHeaders`      | Specifies the headers that can be exposed back, and accessed by, the JavaScript making the cross-origin request. If you need to access headers beyond the [safelisted response headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers#examples), such as `Content-Encoding` or `cf-cache-status`, you must specify it here. | `Content-Encoding`, `cf-cache-status`, `Date`  |
@@ -103,13 +103,13 @@ This example shows a CORS policy added for a bucket that contains the `Roboto-Li
 The `AllowedOrigins` specify the web server being used, and `localhost:3000` is the hostname where the web server is running. The `AllowedMethods` specify that only `GET` requests are allowed and can read objects in your bucket.
 
 ```json
-[ 
-  { 
-    "AllowedOrigins": [ 
-       "http://localhost:3000" 
-    ],  
+[
+  {
+    "AllowedOrigins": [
+       "http://localhost:3000"
+    ],
     "AllowedMethods": [
-       "GET",
+       "GET"
     ]
   }
 ]

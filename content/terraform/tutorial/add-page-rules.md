@@ -8,7 +8,7 @@ meta:
 
 # Add exceptions with Page Rules
 
-In the [Configure HTTPS settings](/terraform/tutorial/configure-https-settings/) tutorial, you configured zone settings that apply to all incoming requests for `example.com`. In this tutorial, you will add an exception to these settings using [Page Rules](/support/page-rules/understanding-and-configuring-cloudflare-page-rules-page-rules-tutorial/).
+In the [Configure HTTPS settings](/terraform/tutorial/configure-https-settings/) tutorial, you configured zone settings that apply to all incoming requests for `example.com`. In this tutorial, you will add an exception to these settings using [Page Rules](/rules/page-rules/).
 
 Specifically, you will increase the security level for a URL known to be expensive to render and cannot be cached: `https://www.example.com/expensive-db-call`. Additionally, you will add a redirect from the previous URL used to host this page.
 
@@ -77,7 +77,6 @@ Terraform will perform the following actions:
           + always_use_https    = false
           + disable_apps        = false
           + disable_performance = false
-          + disable_railgun     = false
           + disable_security    = false
           + disable_zaraz       = false
           + security_level      = "under_attack"
@@ -96,7 +95,6 @@ Terraform will perform the following actions:
           + always_use_https    = false
           + disable_apps        = false
           + disable_performance = false
-          + disable_railgun     = false
           + disable_security    = false
           + disable_zaraz       = false
 
@@ -168,7 +166,6 @@ Terraform will perform the following actions:
           + always_use_https    = false
           + disable_apps        = false
           + disable_performance = false
-          + disable_railgun     = false
           + disable_security    = false
           + disable_zaraz       = false
           + security_level      = "under_attack"
@@ -187,7 +184,6 @@ Terraform will perform the following actions:
           + always_use_https    = false
           + disable_apps        = false
           + disable_performance = false
-          + disable_railgun     = false
           + disable_security    = false
           + disable_zaraz       = false
 
@@ -206,7 +202,7 @@ cloudflare_page_rule.increase-security-on-expensive-page: Creation complete afte
 Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
 ```
 
-With the Page Rules in place, try that call again, along with a test for the "I Am Under Attack" mode:
+With the Page Rules in place, try that call again, along with a test for the I'm Under Attack mode:
 
 ```sh
 $ curl -vso /dev/null https://www.example.com/old-location.php 2>&1 | grep "< HTTP\|Location"
@@ -217,4 +213,4 @@ $ curl -vso /dev/null https://www.example.com/expensive-db-call 2>&1 | grep "< H
 < HTTP/1.1 503 Service Temporarily Unavailable
 ```
 
-The call works as expected. In the first case, the Cloudflare global network responds with a `301` redirecting the browser to the new location. In the second case, the Cloudflare global network initially responds with a `503`, which is consistent with the "I Am Under Attack" mode.
+The call works as expected. In the first case, the Cloudflare global network responds with a `301` redirecting the browser to the new location. In the second case, the Cloudflare global network initially responds with a `503`, which is consistent with the I'm Under Attack mode.
